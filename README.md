@@ -5,10 +5,14 @@ O jogador pode ser **sacerdote** ou **acólito**, da preparação na sacristia a
 
 ## Como abrir
 
+**Jogar online:** https://vitornunes1.github.io/deo-gratias/
+
+Para jogar sem internet, baixe o projeto e siga estes passos:
+
 1. Dê dois cliques em `index.html`. Use **Chrome** ou **Edge** atualizados.
 2. Clique uma vez na tela ou aperte uma tecla. O navegador só libera o som depois disso.
 
-Não é preciso internet, servidor nem instalação. Fontes, textos e melodias estão todos na pasta do projeto.
+A versão baixada não precisa de internet, servidor nem instalação. Fontes, textos e melodias estão todos na pasta do projeto.
 O progresso é salvo automaticamente no próprio navegador. Em **Configurações** é possível exportar ou apagar o salvamento.
 
 **Voz em latim.** O jogo usa as vozes de síntese do sistema. A pronúncia eclesiástica fica muito melhor com uma voz **italiana**:
