@@ -23,9 +23,10 @@
         ['Créditos e fontes', () => DG.screens.credits()],
       ].filter(Boolean);
       const today = DG.calendar.today();
-      const menu = h('div', { class: 'title-menu panel dark' }, items.map(([label, fn]) => h('button', { class: 'menu-item', 'data-nav': 1, onclick: () => { DG.audio.unlock(); DG.sfx.uiSelect(); fn(); } }, label)));
+      const crest = h('div', { class: 'crest' }, h('span', { class: 'crest-line' }), DG.skin.emblem(24, 'gold'), h('span', { class: 'crest-line' }));
+      const menu = h('div', { class: 'title-menu panel dark' }, crest, items.map(([label, fn]) => h('button', { class: 'menu-item', 'data-nav': 1, onclick: () => { DG.audio.unlock(); DG.sfx.uiSelect(); fn(); } }, label)));
       const el = h('div', { class: 'title-screen' },
-        h('div', { class: 'title-logo' }, h('div', { class: 't1' }, 'Deo Gratias'), h('div', { class: 't2' }, 'Simulador da Santa Missa Tridentina'), h('div', { class: 't3' }, 'Missale Romanum · MCMLXII')),
+        h('div', { class: 'title-logo' }, h('div', { class: 't1' }, 'Deo Gratias'), h('div', { class: 't2' }, 'Simulador da Santa Missa Tridentina'), h('div', { class: 't3' }, 'Capela São Pio X · Missale Romanum MCMLXII')),
         menu,
         h('div', { class: 'title-foot' }, 'Hoje: ' + today.name + ' · ' + DG.LIT[today.color].name.toLowerCase() + ' · v' + DG.VERSION));
       const sc = T.sc = { el, modal: false };

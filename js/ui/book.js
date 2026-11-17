@@ -237,11 +237,11 @@
       const color = (DG.game.cel && DG.game.cel.color) || 'albus';
       B.page.innerHTML = '';
       const fig = h('div', { class: 'obj-fig' }, DG.ui.iconCanvas(o.icon, color, 128));
-      B.page.append(fig, h('h2', null, o.name), h('p', { class: 'rubric' }, o.la + ' · ' + DG.data.objects.CATS[o.cat]),
+      B.page.append(...[fig, h('h2', null, o.name), h('p', { class: 'rubric' }, o.la + ' · ' + DG.data.objects.CATS[o.cat]),
         h('h4', null, 'O que é'), h('p', null, o.desc),
         h('h4', null, 'Uso no rito'), h('p', null, o.use),
         h('h4', null, 'Simbolismo e importância'), h('p', null, o.symb),
-        o.rule && o.rule !== '—' ? h('div', { class: 'note' }, h('b', null, 'Norma: '), o.rule) : null);
+        o.rule && o.rule !== '—' ? h('div', { class: 'note' }, h('b', null, 'Norma: '), o.rule) : null].filter(Boolean));
       if (!DG.profile.examined[id]) { DG.profile.examined[id] = Date.now(); DG.store.save(); DG.achievements.checkPassive(); }
     },
     examine(id) { DG.book.open('objects', id); },

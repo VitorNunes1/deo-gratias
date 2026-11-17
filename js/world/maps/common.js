@@ -248,6 +248,7 @@
         petrus: { robe: '#c99a3a', robe2: '#8a6a24', inner: '#2e4d9c', skin: '#e2bd96', hair: '#c9c4ba', keys: true },
         paulus: { robe: '#a3212b', robe2: '#73141b', inner: '#2e5a3a', skin: '#e2bd96', hair: '#3a2a1a', sword: true },
         antonius: { robe: '#5a3c26', robe2: '#3e2818', inner: '#5a3c26', skin: '#e9c7a2', hair: '#3a2a1a', lily: true },
+        pius: { robe: '#f4f0e6', robe2: '#d2cabb', inner: '#f4f0e6', skin: '#ecc9a6', hair: '#f4f0e6', pius: true },
       }[kind] || {};
       if (C.wings) { G.shape(x, cx - 9, top + 6, 6, 14, (i, j) => j > (5 - i) * 1.2, '#f7f2e6'); G.shape(x, cx + 4, top + 6, 6, 14, (i, j) => j > i * 1.2, '#e6dfcf'); }
       // corpo
@@ -265,9 +266,68 @@
       if (C.heart) { G.rect(x, cx - 1, top + 9, 3, 2, '#e8303a'); G.px(x, cx, top + 8, P.g6); }
       if (C.lily) { G.vline(x, cx + 3, top + 6, 12, '#3d7a3a'); G.px(x, cx + 3, top + 5, '#ffffff'); G.px(x, cx + 4, top + 6, '#ffffff'); G.px(x, cx + 2, top + 6, '#ffffff'); }
       if (C.keys) { G.rect(x, cx + 2, top + 10, 4, 1, P.g5); G.px(x, cx + 5, top + 11, P.g5); }
+      if (C.pius) { // murça vermelha sobre os ombros e cruz peitoral
+        G.shape(x, cx - 5, top + 7, 11, 5, (i, j) => Math.abs(i - 5) <= 3 + j * 0.6, '#b0202a');
+        G.hline(x, cx - 4, top + 11, 9, '#7a141c');
+        G.vline(x, cx, top + 9, 4, P.g5); G.hline(x, cx - 1, top + 10, 3, P.g5);
+      }
       if (C.sword) { G.vline(x, cx - 4, top + 6, 14, '#c9ccd4'); G.rect(x, cx - 5, top + 9, 3, 1, P.g5); }
       // base sob os pés: nuvem/lua para Nossa Senhora
       if (kind === 'maria') { G.ellipse(x, cx, baseY - 10, 5, 1.5, '#e9e4d6'); G.px(x, cx - 4, baseY - 11, '#cfc8b6'); }
+    },
+    // ---------- retrato emoldurado (16x20 por dentro) ----------
+    portrait(x, X, Y, kind) {
+      G.bevel(x, X - 2, Y - 2, 20, 24, P.g3, P.g5, P.g1); G.frame(x, X - 1, Y - 1, 18, 22, P.g2);
+      G.vgrad(x, X, Y, 16, 20, ['#1e1712', '#33261c', '#1a130e']);
+      const cx = X + 8;
+      if (kind === 'pius') {
+        G.shape(x, cx - 6, Y + 1, 13, 13, (i, j) => { const d = Math.hypot(i - 6, j - 6); return d <= 6.2 && d >= 5.2; }, P.g4); // auréola
+        G.shape(x, cx - 7, Y + 12, 15, 8, (i, j) => Math.abs(i - 7) <= 3 + j * 0.9, '#b0202a'); // murça
+        G.rect(x, cx - 1, Y + 13, 3, 7, '#f1ece0'); // batina
+        G.ellipse(x, cx, Y + 7, 3, 3.6, '#ecc9a6');
+        G.rect(x, cx - 3, Y + 4, 2, 4, '#e9e5dc'); G.rect(x, cx + 2, Y + 4, 2, 4, '#e9e5dc'); // cabelos brancos
+        G.rect(x, cx - 2, Y + 3, 5, 2, '#fbf8f0'); // solidéu branco
+        G.px(x, cx - 1, Y + 7, '#3a2a20'); G.px(x, cx + 1, Y + 7, '#3a2a20'); G.px(x, cx, Y + 9, '#c89a7e');
+        G.vline(x, cx, Y + 14, 4, P.g5); G.hline(x, cx - 1, Y + 15, 3, P.g5);
+        G.px(x, cx - 2, Y + 12, P.g4); G.px(x, cx + 2, Y + 12, P.g4);
+      } else if (kind === 'lefebvre') {
+        G.shape(x, cx - 7, Y + 12, 15, 8, (i, j) => Math.abs(i - 7) <= 3 + j * 0.9, '#6a2a62'); // murça violácea
+        G.rect(x, cx - 7, Y + 18, 15, 2, '#f1ece0'); for (let i = 0; i < 15; i += 2) G.px(x, cx - 7 + i, Y + 18, '#d8d0c0'); // roquete
+        G.rect(x, cx - 1, Y + 13, 3, 5, '#4a1a44');
+        G.ellipse(x, cx, Y + 7, 3, 3.6, '#e8c4a0');
+        G.px(x, cx - 3, Y + 6, '#c9c4ba'); G.px(x, cx + 3, Y + 6, '#c9c4ba'); G.px(x, cx - 3, Y + 7, '#c9c4ba'); G.px(x, cx + 3, Y + 7, '#c9c4ba');
+        G.rect(x, cx - 1, Y + 3, 3, 1, '#7a2a6e'); // solidéu violáceo
+        G.px(x, cx - 1, Y + 7, '#3a2a20'); G.px(x, cx + 1, Y + 7, '#3a2a20'); G.hline(x, cx - 1, Y + 9, 3, '#c08a70');
+        G.vline(x, cx, Y + 14, 4, P.g5); G.hline(x, cx - 1, Y + 15, 3, P.g5); // cruz peitoral
+        G.line(x, cx - 3, Y + 12, cx, Y + 14, P.g3); G.line(x, cx + 3, Y + 12, cx, Y + 14, P.g3);
+      }
+    },
+    // ---------- estandarte com o emblema da Fraternidade ----------
+    banner(x, cx, top, w, h) {
+      const X = Math.round(cx - w / 2);
+      G.rect(x, X - 3, top, w + 6, 2, P.g3); G.hline(x, X - 3, top, w + 6, P.g5); // travessa
+      G.rect(x, X - 5, top - 1, 3, 4, P.g4); G.rect(x, X + w + 2, top - 1, 3, 4, P.g4); G.px(x, X - 4, top - 2, P.g6); G.px(x, X + w + 3, top - 2, P.g6);
+      G.vline(x, cx, top - 6, 6, P.g3); G.rect(x, cx - 1, top - 8, 3, 3, P.g5);
+      const tip = Math.round(w * 0.45);
+      const cloth = (i, j) => j < h - tip ? true : Math.abs(i - (w - 1) / 2) <= (w / 2) * (1 - (j - (h - tip)) / tip);
+      G.shape(x, X, top + 2, w, h, cloth, '#5b1220');
+      G.dither(x, X, top + 2, w, h, '#6e1a2a', (i, j) => cloth(i, j) ? ((i + j) % 6 === 0 ? 1 : 0.12) : 0);
+      // galão dourado
+      G.shape(x, X, top + 2, w, h, (i, j) => cloth(i, j) && (!cloth(i - 1, j) || !cloth(i + 1, j) || !cloth(i, j + 1) || i === 1 || i === w - 2), P.g4);
+      G.shape(x, X + 3, top + 5, w - 6, h - 6, (i, j) => { const ii = i + 3, jj = j + 3; return cloth(ii, jj) && cloth(ii, jj + 3) && (!cloth(ii - 1, jj + 3) || !cloth(ii + 1, jj + 3) || jj === 3 || i === 0 || i === w - 7) && (i === 0 || i === w - 7 || j === 0 || !cloth(ii, jj + 4)); }, P.g2);
+      const eh = Math.min(Math.round(h * 0.5), Math.round((w - 8) / 0.75));
+      DG.emblem.draw(x, cx, top + 8, eh, 'gold');
+      // cordões com borlas
+      for (const s of [-1, 1]) { const bx = cx + s * (w / 2 + 1); G.vline(x, bx, top + 2, Math.round(h * 0.55), P.g3); G.rect(x, bx - 1, top + 2 + Math.round(h * 0.55), 3, 4, P.g4); G.px(x, bx, top + 6 + Math.round(h * 0.55), P.g2); }
+    },
+    // ---------- quadro de avisos da capela ----------
+    noticeBoard(x, cx, baseY) {
+      const X = cx - 12, Y = baseY - 34;
+      G.rect(x, X + 2, baseY - 8, 2, 8, P.w2); G.rect(x, X + 20, baseY - 8, 2, 8, P.w2);
+      G.rect(x, X, Y, 24, 26, P.w2); G.frame(x, X, Y, 24, 26, P.w5); G.rect(x, X + 2, Y + 2, 20, 22, '#efe3c8');
+      DG.emblem.draw(x, cx, Y + 3, 12, 'red');
+      for (let k = 0; k < 4; k++) G.hline(x, X + 4, Y + 16 + k * 2, k === 3 ? 10 : 16, '#7a6a58');
+      G.rect(x, X - 1, Y - 2, 26, 2, P.w4); G.hline(x, X - 1, Y - 2, 26, P.w6);
     },
     // ---------- castiçal de pé / tocheiro ----------
     floorCandle(x, cx, baseY, lit, t) {

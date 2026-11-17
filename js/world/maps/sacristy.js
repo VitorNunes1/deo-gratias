@@ -34,10 +34,17 @@
     // armário dos vasos sagrados (cofre)
     G.rect(x, 60, 18, 40, 52, P.w2); G.rect(x, 62, 20, 36, 48, P.w3); G.frame(x, 64, 22, 15, 44, P.w1); G.frame(x, 81, 22, 15, 44, P.w1);
     G.rect(x, 78, 42, 1, 4, P.g4); G.rect(x, 81, 42, 1, 4, P.g4); G.rect(x, 58, 16, 44, 3, P.w5);
-    // paramenteira baixa sob o crucifixo (para o acólito)
+    // retratos de São Pio X e de Dom Lefebvre, e o emblema da Fraternidade
+    A.portrait(x, 172, 9, 'pius');
+    G.bevel(x, 280, 6, 24, 28, P.g3, P.g5, P.g1); G.rect(x, 282, 8, 20, 24, '#efe3c8'); G.frame(x, 283, 9, 18, 22, '#a3161c');
+    DG.emblem.draw(x, 292, 11, 18, 'red');
+    A.portrait(x, 364, 9, 'lefebvre');
     sc.bg = bgc.c;
 
     // ---------- objetos ----------
+    sc.addProp({ id: 'portraitPius', x: 180, y: 40, examine: 'imagoPii', hit: { x: 170, y: 7, w: 20, h: 24 } });
+    sc.addProp({ id: 'insigne', x: 292, y: 40, examine: 'insigneFSSPX', hit: { x: 280, y: 6, w: 24, h: 28 } });
+    sc.addProp({ id: 'portraitLefebvre', x: 372, y: 40, examine: 'imagoLefebvre', hit: { x: 362, y: 7, w: 20, h: 24 } });
     // lavabo da sacristia
     sc.addProp({ id: 'lavaboSac', x: 37, y: 84, examine: 'lavaboSacristiae', interact: { label: 'Lavar as mãos' }, ix: 37, iy: 96, hit: { x: 18, y: 34, w: 40, h: 54 },
       draw(x, sx, sy) {

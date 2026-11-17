@@ -2,6 +2,7 @@
 
 Jogo de navegador, em pixel art, que ensina a celebrar e a servir a Missa segundo o **Missale Romanum de 1962**.
 O jogador pode ser **sacerdote** ou **acólito**, da preparação na sacristia até o retorno depois das orações leoninas.
+O jogo se passa na **Capela São Pio X**, uma capela da Fraternidade Sacerdotal São Pio X (FSSPX).
 
 ## Como abrir
 
@@ -29,6 +30,7 @@ Sem voz instalada, o texto avança no tempo estimado de leitura e o jogo continu
 | Celebrações | 27 Missas do ano litúrgico, com cores, paramentos, Próprios e cantos de cada dia |
 | Calendário | Calendário tradicional com precedência de 1962, que sugere a próxima celebração disponível |
 | Cenários | Nave e presbitério, altar-mor, sacristia, sala dos paramentos, capela de Nossa Senhora |
+| A capela | Emblema da FSSPX no retábulo, nos estandartes, na sacristia e na fachada · imagem de São Pio X · retratos de São Pio X e de Dom Lefebvre |
 | Livro | Missal bilíngue, orações, folha de respostas do acólito, cantos em notação quadrada, manual e enciclopédia de objetos |
 | Avaliação | Rubrica, posição, respostas, tempo e reverência, com nota, lista de erros, histórico, conquistas e graus |
 
@@ -62,6 +64,7 @@ Sem voz instalada, o texto avança no tempo estimado de leitura e o jogo continu
 
 O projeto é JavaScript puro, sem dependências nem etapa de compilação. Todos os módulos ficam no objeto global `DG`.
 A arte é desenhada por código em um canvas de 480×270 ampliado sem suavização.
+A interface segue o estilo de um missal antigo: molduras douradas em pixel art, pergaminho, filetes vermelhos, letra gótica nos títulos e versaletes. As peças são geradas por `js/ui/skin.js` e aplicadas por `css/skin.css`. O emblema da Fraternidade é desenhado por `js/gfx/emblem.js`.
 
 | Pasta | Conteúdo |
 | --- | --- |
@@ -124,5 +127,6 @@ O capítulo **Fontes e revisão › Pontos a revisar** do manual do jogo detalha
 
 ## Licenças
 
-As fontes tipográficas Cinzel, Cinzel Decorative, EB Garamond e UnifrakturMaguntia usam a SIL Open Font License. As licenças estão em `assets/fonts`.
+As fontes tipográficas EB Garamond e UnifrakturMaguntia usam a SIL Open Font License. As licenças estão em `assets/fonts`.
+O emblema da Fraternidade Sacerdotal São Pio X foi redesenhado em pixel art para o jogo. Este é um projeto independente de fiéis, sem vínculo oficial com a FSSPX.
 Os textos e as transcrições musicais vêm do Divinum Officium e do GregoBase. Confira os termos desses projetos antes de uma distribuição pública.

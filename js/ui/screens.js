@@ -313,9 +313,10 @@
         h('h4', null, 'Textos litúrgicos'), h('p', { class: 'small' }, 'Divinum Officium (divinumofficium.com; github.com/DivinumOfficium) — Ordinário, Próprios, Prefácios em latim; tradução portuguesa dos Próprios, adaptada à norma brasileira. Ordinário e Prefácios traduzidos para este jogo.'),
         h('h4', null, 'Rubricas'), h('p', { class: 'small' }, 'Ritus servandus in celebratione Missæ (Missal de 1962); Codex Rubricarum (1960); J. B. O’Connell, The Celebration of Mass, 4.ª ed., Bruce, 1964.'),
         h('h4', null, 'Canto gregoriano'), h('p', { class: 'small' }, 'GregoBase (gregobase.selapa.net) — partituras GABC da edição vaticana (Graduale Romanum e Liber Usualis, 1961); mapeamento das Missas segundo o projeto jgabc (B. Bloomfield).'),
-        h('h4', null, 'Tipografia'), h('p', { class: 'small' }, 'EB Garamond, Cinzel, Cinzel Decorative e UnifrakturMaguntia — SIL Open Font License (ver assets/fonts).'),
+        h('h4', null, 'A capela'), h('p', { class: 'small' }, 'O jogo se passa na Capela São Pio X, da Fraternidade Sacerdotal São Pio X. O emblema da Fraternidade foi redesenhado em pixel art para este jogo. Este é um projeto independente de fiéis, sem vínculo oficial com a FSSPX.'),
+        h('h4', null, 'Tipografia'), h('p', { class: 'small' }, 'EB Garamond e UnifrakturMaguntia — SIL Open Font License (ver assets/fonts).'),
         h('div', { class: 'note small' }, 'Veja no Manual o capítulo “Pontos a revisar por um liturgista”.'),
-        h('p', { class: 'center', style: { fontFamily: 'var(--f-deco)', color: 'var(--wine)', fontSize: '1.3em' } }, 'Ad majorem Dei gloriam'),
+        h('p', { class: 'center', style: { fontFamily: 'var(--f-black)', color: 'var(--wine)', fontSize: '1.5em' } }, 'Ad majorem Dei gloriam'),
         h('div', { class: 'row', style: { justifyContent: 'flex-end' } }, h('button', { class: 'btn', 'data-nav': 1, onclick: () => DG.ui.pop(sc) }, 'Fechar')));
       const sc = screen(panel);
     },

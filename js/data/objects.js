@@ -205,6 +205,27 @@
   add('velarium', 'Velário', 'candelabrum votivum', 'ecclesia', 'candelabrum', 'Suporte de velas votivas diante de uma imagem.', 'Acende-se uma vela como sinal da oração que continua.', 'A oração que permanece diante de Deus.', '—');
   add('pieta', 'Pietà', 'Pietas', 'ecclesia', 'velum', 'Imagem de Nossa Senhora das Dores com o Filho morto nos braços.', 'Devoção às Sete Dores.', 'A Mãe associada ao Sacrifício do Filho.', '—');
 
+  // ---------------- a Fraternidade ----------------
+  add('insigneFSSPX', 'Emblema da Fraternidade Sacerdotal São Pio X', 'insigne Fraternitatis Sacerdotalis Sancti Pii X', 'ecclesia', 'insigne',
+    'Dois corações entrelaçados, encimados por uma coroa com a cruz. Aparece aqui no coroamento do retábulo, nos estandartes do presbitério, na sacristia, na sala dos paramentos e na fachada.',
+    'Identifica as casas e capelas da Fraternidade, como esta Capela São Pio X.',
+    'Os dois corações representam a devoção aos Sagrados Corações de Jesus e de Maria. A coroa com a cruz evoca a realeza de Nosso Senhor.',
+    '—');
+  add('imagoPii', 'São Pio X', 'S. Pius X, Papa', 'ecclesia', 'insigne',
+    'José Sarto (1835–1914), Papa de 1903 a 1914, canonizado em 1954. É representado com batina branca, murça vermelha e solidéu branco.',
+    'Padroeiro da Fraternidade e desta capela. Diante da imagem, no fundo da nave, pode-se rezar: “Sancte Pie Décime, ora pro nobis.”',
+    'Seu lema foi “Instauráre ómnia in Christo”, restaurar todas as coisas em Cristo (Ef 1,10). Combateu o modernismo e promoveu a Comunhão frequente e a primeira Comunhão das crianças.',
+    'No calendário de 1962, sua festa é a 3 de setembro.');
+  add('imagoLefebvre', 'Retrato de Dom Marcel Lefebvre', 'Marcellus Lefebvre, archiepiscopus', 'ecclesia', 'insigne',
+    'Arcebispo francês (1905–1991), missionário na África, arcebispo de Dacar e superior-geral dos Padres do Espírito Santo. Fundou a Fraternidade Sacerdotal São Pio X em 1970.',
+    'Seu retrato na sacristia recorda o fundador da Fraternidade.',
+    'Seu lema episcopal: “Crédidimus caritáti”, nós cremos na caridade (1 Jo 4,16).',
+    '—');
+  add('tabulaNotitiarum', 'Quadro de avisos', 'tabula notitiarum', 'ecclesia', 'insigne',
+    'Quadro de madeira junto às portas, com o emblema da Fraternidade, os horários das Missas e das confissões e os avisos da semana.',
+    'Ali os fiéis conferem as celebrações e as atividades do priorado.',
+    '—', '—');
+
   DG.data.objects = {
     list: L, CATS,
     get: id => L.find(o => o.id === id) || null,

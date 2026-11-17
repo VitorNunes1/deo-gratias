@@ -41,6 +41,7 @@
       st.style.width = w + 'px'; st.style.height = hh + 'px';
       document.documentElement.style.setProperty('--u', (w / DG.W) + 'px');
       UI.scale = w / DG.W;
+      if (DG.skin) DG.skin.apply();
     },
     // ---------- telas (pilha) ----------
     push(screen) {

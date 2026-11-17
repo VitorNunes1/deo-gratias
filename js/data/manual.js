@@ -28,6 +28,11 @@
      <div class="note">Neste jogo a <b>Missa rezada</b> está completa nos dois papéis. A <b>Missa cantada</b> pode ser jogada sem incenso (forma permitida): o coro canta o Próprio e o Kyriale do dia e o celebrante canta as orações e as leituras no tom ferial (tom reto), o diálogo do Prefácio e o Pater noster no tom solene. A <b>Missa solene</b>, com diácono e subdiácono, está descrita aqui; sua simulação é a próxima etapa do projeto.</div>`);
 
   // ---------------- AS PARTES ----------------
+  ch('fraternitas', 'A Santa Missa', 'A Capela São Pio X e a Fraternidade',
+    `<p>O jogo se passa na <b>Capela São Pio X</b>, uma capela da <b>Fraternidade Sacerdotal São Pio X</b> (FSSPX). O emblema da Fraternidade, dois corações entrelaçados sob uma coroa com a cruz, aparece no retábulo, nos estandartes, na sacristia e na fachada.</p>
+     <p>A Fraternidade foi fundada em 1970 por Dom <b>Marcel Lefebvre</b> (1905–1991), arcebispo missionário. Seu padroeiro é <b>São Pio X</b>, Papa de 1903 a 1914, cujo lema era “Instauráre ómnia in Christo”.</p>
+     <p>As capelas da Fraternidade celebram a Missa segundo os livros litúrgicos de 1962, os mesmos que este jogo segue.</p>
+     <div class="note">Este é um projeto independente de fiéis. Não é uma publicação oficial da Fraternidade Sacerdotal São Pio X.</div>`);
   ch('pe', 'As partes da Missa', 'Orações ao pé do altar',
     `<p>Antes de subir ao altar, o sacerdote — como Moisés que tirou as sandálias diante da sarça — se humilha ao pé dos degraus. Reza com o acólito o <b>Salmo 42</b> (“Júdica me, Deus”), cuja antífona é “Introíbo ad altáre Dei”: “Subirei ao altar de Deus, de Deus que alegra a minha juventude”.</p>
      <p>Segue o <b>Confíteor</b>: primeiro o sacerdote, profundamente inclinado, confessa-se diante de Deus, dos santos e “de vós, irmãos”; o acólito responde “Misereátur tui…”. Depois o acólito, em nome do povo, diz o seu Confíteor (“tibi, pater… te, pater”), e o sacerdote pronuncia o <i>Misereátur</i> e o <i>Indulgéntiam</i>.</p>

@@ -30,6 +30,7 @@
 
   // ---------- desenhos 32x32 ----------
   const ICONS = {
+    insigne(x) { if (DG.emblem) DG.emblem.icon(x); }, // emblema da Fraternidade
     calix(x) { // cálice
       lathe(x, 16, 4, 26, j => {
         if (j < 10) return 7 - j * 0.25 - (j > 7 ? (j - 7) * 1.4 : 0);   // copa

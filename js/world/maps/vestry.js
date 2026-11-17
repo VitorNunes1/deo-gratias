@@ -20,9 +20,13 @@
     // cartão das orações da paramentação
     G.bevel(x, 120, 10, 28, 20, P.g3, P.g5, P.g1); G.rect(x, 122, 12, 24, 16, P.l4); for (let k = 0; k < 6; k++) G.hline(x, 124, 14 + k * 2, 20, '#7a6a58');
     G.rect(x, 124, 13, 3, 2, P.v3);
+    // emblema da Fraternidade sobre o arcaz
+    G.bevel(x, 222, 6, 22, 26, P.g3, P.g5, P.g1); G.rect(x, 224, 8, 18, 22, '#5b1220');
+    DG.emblem.draw(x, 233, 10, 18, 'gold');
     // espelho
     G.bevel(x, 286, 6, 24, 30, P.g3, P.g5, P.g1); G.vgrad(x, 288, 8, 20, 26, ['#9fb4c0', '#6f8794', '#c8d6de']); G.line(x, 292, 12, 300, 26, '#e6eef2');
     sc.bg = bgc.c;
+    sc.addProp({ id: 'insigne', x: 233, y: 40, examine: 'insigneFSSPX', hit: { x: 222, y: 6, w: 22, h: 26 } });
 
     // arcaz: grande cômoda com gavetas para cada cor litúrgica
     const ARC = { x: 76, y: 96, w: 200 };

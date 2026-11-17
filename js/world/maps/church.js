@@ -71,9 +71,9 @@
     G.rect(x, R.x - 2, R.y + 12, R.w + 4, 8, P.g4); G.hline(x, R.x - 2, R.y + 12, R.w + 4, P.g6); G.hline(x, R.x - 2, R.y + 19, R.w + 4, P.g1);
     for (let i = R.x; i < R.x + R.w; i += 4) G.px(x, i, R.y + 16, P.g2);
     G.shape(x, CX - 40, R.y - 6, 81, 18, (i, j) => { const d = Math.hypot(i - 40, (j - 18) * 2.2); return d <= 40 && d >= 35; }, P.g4);
-    // medalhão IHS
-    G.ellipse(x, CX, R.y + 1, 6, 6, P.g5); G.ellipse(x, CX, R.y + 1, 4.5, 4.5, P.v3);
-    G.rect(x, CX - 3, R.y, 1, 3, P.g6); G.rect(x, CX - 1, R.y - 1, 2, 4, P.g6); G.rect(x, CX + 2, R.y, 1, 3, P.g6);
+    // emblema da Fraternidade Sacerdotal São Pio X no coroamento do retábulo
+    G.ellipse(x, CX, R.y + 3, 9, 8, P.b1);
+    DG.emblem.draw(x, CX, R.y - 5, 16, 'gold');
     // volutas e anjinhos sobre as colunas externas
     for (const c of [colX[0], colX[3]]) { G.ellipse(x, c, R.y + 8, 3, 3, P.g4); G.ellipse(x, c, R.y + 8, 1.5, 1.5, P.g2); G.ellipse(x, c, R.y + 3, 2, 2, '#f0d4b8'); G.px(x, c - 3, R.y + 3, P.l4); G.px(x, c + 3, R.y + 3, P.l4); }
     // anjos adoradores ajoelhados ao lado do trono
@@ -222,6 +222,8 @@
     A.wallTop(x, 80, 0, 16, K.naveTop - 14); A.wallTop(x, 480, 0, 16, 196); A.wallTop(x, 480, 238, 16, K.naveTop - 238 - 14);
     // arco triunfal / degrau do presbitério
     G.rect(x, 16, K.naveTop - 14, 80, 14, P.st3); G.rect(x, 480, K.naveTop - 14, 80, 14, P.st3);
+    // estandartes da Fraternidade nas paredes laterais do presbitério
+    A.banner(x, 64, 34, 30, 78); A.banner(x, 512, 34, 30, 78);
     // altares laterais
     drawSideAltar(x, 24, K.naveTop - 14, 'maria', cel);
     drawSideAltar(x, 488, K.naveTop - 14, 'joseph', cel);
@@ -271,7 +273,7 @@
   // ------------------------------------------------------------------
   DG.maps.church = function (cel, opts) {
     opts = opts || {};
-    const sc = new DG.Scene({ id: 'church', name: 'Igreja', w: W, h: H, ambient: '#706055' });
+    const sc = new DG.Scene({ id: 'church', name: 'Capela São Pio X', w: W, h: H, ambient: '#706055' });
     sc.K = K; sc.CX = CX;
     // estado dinâmico (alterado pelo rito)
     sc.state = Object.assign({
@@ -298,6 +300,12 @@
     G.rect(x, 424, 222, 46, 6, P.w3); G.hline(x, 424, 222, 46, P.w5);
     // imagem de Nossa Senhora (lado do Evangelho)
     A.statue(x, 124, 222, 'maria', 1.05);
+    // imagem de São Pio X, padroeiro da capela e da Fraternidade (fundo da nave, à direita)
+    G.rect(x, 500, 934, 40, 4, P.st4); G.hline(x, 500, 934, 40, P.st6);
+    A.statue(x, 520, 934, 'pius', 1.15);
+    A.floorCandle(x, 504, 936, false); A.floorCandle(x, 536, 936, false);
+    // quadro de avisos junto às portas
+    A.noticeBoard(x, 360, 998);
     // genuflexório da comunhão (do lado da nave)
     G.rect(x, K.apse.x, K.railY + 10, K.apse.w, 6, P.w3); G.hline(x, K.apse.x, K.railY + 10, K.apse.w, P.w5); G.hline(x, K.apse.x, K.railY + 15, K.apse.w, P.w1);
     // degrau do arco
@@ -319,6 +327,8 @@
     sc.block(410, 174, 36, 30);      // credência
     sc.block(424, 222, 46, 26);      // sedília
     sc.block(112, 210, 24, 14);      // imagem
+    sc.block(498, 920, 44, 18);      // imagem de São Pio X
+    sc.block(346, 988, 28, 10);      // quadro de avisos
     sc.block(K.apse.x, K.railY - 2, CX - 16 - K.apse.x, 12); sc.block(CX + 16, K.railY - 2, K.apse.x + K.apse.w - CX - 16, 12);
     sc.block(16, K.naveTop - 30, 80, 20); sc.block(480, K.naveTop - 30, 80, 20); // altares laterais
     sc.block(470, 684, 76, 46); // confessionário
@@ -455,6 +465,24 @@
     sc.addProp({ id: 'statueMaria', x: 124, y: 222, examine: 'imagoMariae', hit: { x: 112, y: 182, w: 24, h: 42 } });
     sc.addProp({ id: 'window1', x: 150, y: 60, examine: 'vitrum', hit: { x: 130, y: 10, w: 34, h: 96 } });
     sc.addProp({ id: 'window2', x: 430, y: 60, examine: 'vitrum', hit: { x: 412, y: 10, w: 34, h: 96 } });
+    sc.addProp({ id: 'crest', x: CX, y: 14, examine: 'insigneFSSPX', hit: { x: CX - 8, y: 0, w: 16, h: 14 } });
+    sc.addProp({ id: 'bannerL', x: 64, y: 112, examine: 'insigneFSSPX', hit: { x: 49, y: 28, w: 30, h: 82 } });
+    sc.addProp({ id: 'bannerR', x: 512, y: 112, examine: 'insigneFSSPX', hit: { x: 497, y: 28, w: 30, h: 82 } });
+    sc.addProp({ id: 'notices', x: 360, y: 998, examine: 'tabulaNotitiarum', hit: { x: 346, y: 962, w: 28, h: 36 } });
+    sc.addProp({ id: 'statuePius', x: 520, y: 934, examine: 'imagoPii', hit: { x: 506, y: 886, w: 28, h: 50 }, interact: { label: 'Rezar diante de São Pio X' }, ix: 520, iy: 950,
+      onUse: async () => {
+        const p = DG.game.player; if (!p || sc.praying || DG.game.state === 'rite') return;
+        sc.praying = true;
+        await p.walkTo(520, 950, { facing: 'up' });
+        await p.play('ajoelhar');
+        const role = DG.game.role === 'sacerdos' ? 'P' : 'M';
+        const la = 'Sancte Pie Décime, ora pro nobis.';
+        DG.emit('rite:say', { who: role, la, pt: 'São Pio X, rogai por nós.', voice: 'submissa' });
+        await DG.voice.speak(la, { role: role === 'P' ? 'priest' : 'server', volume: 0.6 }).promise;
+        await DG.wait(1.2);
+        DG.hud.hideSay();
+        sc.praying = false;
+      } });
     sc.addProp({ id: 'reredos', x: CX, y: 20, examine: 'retabulum', hit: { x: K.reredos.x, y: 0, w: K.reredos.w, h: 36 } });
 
     // ---------- pontos e zonas ----------

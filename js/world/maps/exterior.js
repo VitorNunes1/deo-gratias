@@ -13,7 +13,23 @@
     for (let i = 0; i < 70; i++) { const sx = r() * DG.W, sy = r() * 80; G.px(x, sx, sy, sy < 40 ? '#e8ecff' : '#9aa0c8'); }
     // montes e casario distantes
     G.shape(x, 0, 150, DG.W, 60, (i, j) => j > 30 + Math.sin(i * 0.02) * 10 + Math.sin(i * 0.07) * 4, '#3a2a3a');
-    for (let i = 0; i < DG.W; i += 14) { const h = 8 + Math.floor(U.hash2(i, 1) * 14); if (i > 120 && i < 360) continue; G.rect(x, i, 196 - h, 12, h + 10, '#2a1e2c'); G.rect(x, i + 2, 196 - h + 3, 2, 2, U.hash2(i, 5) > 0.6 ? '#f1c070' : '#3a2a3a'); }
+    // cúpula e campanário de outras igrejas ao longe
+    G.shape(x, 44, 132, 30, 18, (i, j) => Math.hypot(i - 15, (j - 17) * 1.4) <= 15, '#2a1e2c'); G.rect(x, 46, 148, 26, 50, '#2a1e2c');
+    G.rect(x, 57, 124, 4, 9, '#2a1e2c'); G.rect(x, 58, 118, 2, 7, '#2a1e2c'); G.rect(x, 56, 120, 6, 2, '#2a1e2c');
+    G.rect(x, 418, 120, 14, 80, '#2a1e2c'); G.shape(x, 416, 104, 18, 17, (i, j) => j >= Math.abs(i - 8.5) * 1.9, '#2a1e2c'); G.rect(x, 424, 96, 2, 9, '#2a1e2c'); G.rect(x, 422, 98, 6, 2, '#2a1e2c');
+    G.shape(x, 421, 128, 8, 10, G.roundArchMask(8, 10), '#3a2a3a');
+    // casario colonial: telhados de duas águas, chaminés e janelas acesas
+    for (let i = -6, k = 0; i < DG.W; k++) {
+      const w = 18 + Math.floor(U.hash2(k, 2) * 14), h = 12 + Math.floor(U.hash2(k, 1) * 14);
+      if (i + w > 122 && i < 358) { i = i < 240 ? 358 : i + w; continue; }
+      const top = 200 - h, roof = Math.ceil(w * 0.32);
+      G.rect(x, i, top, w, h + 8, k % 2 ? '#2e2030' : '#33232f');
+      G.shape(x, i - 2, top - roof, w + 4, roof + 1, (a, b) => b >= Math.abs(a - (w + 3) / 2) * (roof / ((w + 4) / 2)), '#3a2028');
+      G.hline(x, i - 2, top, w + 4, '#4a2a2c');
+      if (U.hash2(k, 7) > 0.5) G.rect(x, i + Math.floor(w * 0.7), top - roof + 1, 3, roof - 1, '#2a1a22');
+      for (let wx = i + 3; wx < i + w - 4; wx += 7) { const lit = U.hash2(wx, 5) > 0.62; G.rect(x, wx, top + 4, 3, 4, lit ? '#e8b060' : '#24182a'); if (lit) G.px(x, wx + 1, top + 4, '#ffd890'); }
+      i += w + 1 + Math.floor(U.hash2(k, 3) * 4);
+    }
     // praça (adro) em pedra
     G.vgrad(x, 0, 206, DG.W, 64, ['#6a5a52', '#544640', '#3a302c']);
     for (let j = 210; j < 270; j += 6) G.hline(x, 0, j, DG.W, '#4a3e38');
@@ -42,7 +58,17 @@
       G.shape(x, tx + 13, 141, 10, 22, G.roundArchMask(10, 22), '#f0b860');
     }
     // relógio na torre esquerda
-    G.ellipse(x, cx - 90, 134, 7, 7, '#efe3c8'); G.ellipse(x, cx - 90, 134, 5.5, 5.5, '#2a2a30'); G.line(x, cx - 90, 134, cx - 90, 130, '#efe3c8'); G.line(x, cx - 90, 134, cx - 87, 135, '#efe3c8');
+    // nichos com imagens de São Pedro e São Paulo nas torres
+    for (const [ox, robe] of [[cx - 90, '#c9b48a'], [cx + 90, '#c9b48a']]) {
+      G.shape(x, ox - 5, 118, 11, 18, G.roundArchMask(11, 18), stone[3]); G.shape(x, ox - 4, 119, 9, 16, G.roundArchMask(9, 16), '#3a2c26');
+      G.rect(x, ox - 2, 125, 5, 10, robe); G.ellipse(x, ox, 123, 1.6, 1.8, '#e6d6b8'); G.rect(x, ox - 3, 135, 7, 2, stone[0]);
+      G.vline(x, ox + (ox < cx ? 3 : -3), 124, 9, '#8a8a90');
+    }
+    // cunhais (pedras de canto) das torres
+    for (const tx of [cx - 108, cx + 72]) for (let j = 64, k = 0; j < 204; j += 6, k++) { G.rect(x, tx + (k % 2 ? 0 : 0), j, k % 2 ? 4 : 6, 5, stone[0]); G.rect(x, tx + 36 - (k % 2 ? 4 : 6), j, k % 2 ? 4 : 6, 5, stone[0]); G.hline(x, tx, j + 5, 36, stone[3]); }
+    // cornija sob o frontão e pilastras da fachada
+    G.rect(x, cx - 74, 90, 149, 3, stone[0]); G.hline(x, cx - 74, 93, 149, stone[3]); G.hline(x, cx - 72, 94, 145, stone[2]);
+    for (const px of [cx - 70, cx + 64, cx - 34, cx + 28]) { G.rect(x, px, 95, 6, 113, stone[0]); G.vline(x, px + 5, 95, 113, stone[2]); G.rect(x, px - 1, 95, 8, 3, stone[0]); G.rect(x, px - 1, 202, 8, 6, stone[2]); }
     // rosácea
     DG.art.rose(x, cx, 98, 18);
     // portal gótico com arquivoltas
@@ -51,8 +77,15 @@
     G.rect(x, cx - 14, 168, 29, 40, '#5a3a24'); G.vline(x, cx, 168, 40, '#2a1a10');
     for (let j = 172; j < 206; j += 8) G.hline(x, cx - 13, j, 27, '#4a2e1c');
     G.rect(x, cx - 4, 186, 2, 2, P.g4); G.rect(x, cx + 2, 186, 2, 2, P.g4);
-    // tímpano com Agnus Dei
-    G.ellipse(x, cx, 160, 5, 3, '#efe3c8'); G.ellipse(x, cx + 4, 157, 1.5, 1.5, '#efe3c8');
+    // tímpano com o emblema da Fraternidade Sacerdotal São Pio X
+    G.shape(x, cx - 13, 153, 27, 16, (i, j) => { const m = G.gothicMask(29, 56, 15); return m(i + 1, j + 1) && j < 15; }, '#1b2850');
+    DG.emblem.draw(x, cx, 154, 14, 'gold');
+    G.hline(x, cx - 14, 168, 29, stone[0]);
+    // friso com a dedicatória D·O·M (Deo Optimo Maximo)
+    G.rect(x, cx - 16, 130, 33, 7, stone[0]); G.frame(x, cx - 16, 130, 33, 7, stone[2]);
+    const GL = { D: ['110', '101', '101', '101', '110'], O: ['010', '101', '101', '101', '010'], M: ['10001', '11011', '10101', '10001', '10001'], '·': ['0', '0', '1', '0', '0'] };
+    let lx = cx - 10;
+    for (const ch of ['D', '·', 'O', '·', 'M']) { const g = GL[ch]; for (let r = 0; r < 5; r++) for (let c = 0; c < g[r].length; c++) if (g[r][c] === '1') G.px(x, lx + c, 131 + r, '#6a5236'); lx += g[0].length + 1; }
     // janelas laterais da fachada
     for (const wx of [cx - 56, cx + 40]) { G.shape(x, wx, 140, 16, 34, G.gothicMask(16, 34, 9), '#2a1e24'); G.shape(x, wx + 2, 142, 12, 30, G.gothicMask(12, 30, 7), '#e6a860'); G.vline(x, wx + 8, 142, 30, '#2a1e24'); }
     // escadaria
@@ -65,7 +98,13 @@
     x.restore();
     // árvores (ciprestes) e lampiões
     for (const tx of [40, 90, 390, 440]) { G.shape(x, tx - 7, 120, 15, 92, (i, j) => Math.abs(i - 7) <= 1 + j * 0.08, '#1d2a22'); G.dither(x, tx - 7, 120, 15, 92, '#2e4234', 0.2); }
-    for (const lx of [150, 330]) { G.vline(x, lx, 180, 34, '#1a1414'); G.rect(x, lx - 3, 174, 7, 7, '#2a2020'); G.rect(x, lx - 2, 175, 5, 5, '#ffd27a'); }
+    for (const lx of [150, 330]) {
+      G.rect(x, lx - 2, 210, 5, 3, '#1a1414'); G.vline(x, lx, 182, 30, '#1a1414'); G.vline(x, lx + 1, 186, 24, '#2a2222');
+      G.rect(x, lx - 1, 190, 3, 1, '#1a1414'); G.px(x, lx - 2, 189, '#1a1414'); G.px(x, lx + 2, 189, '#1a1414');
+      G.rect(x, lx - 3, 173, 7, 9, '#1a1414'); G.rect(x, lx - 2, 174, 5, 7, '#ffd27a'); G.vline(x, lx, 174, 7, '#c08a40');
+      G.shape(x, lx - 4, 169, 9, 4, (i, j) => j >= Math.abs(i - 4) * 0.8, '#1a1414'); G.px(x, lx, 167, '#1a1414'); G.px(x, lx, 168, '#1a1414');
+      G.rect(x, lx - 3, 182, 7, 1, '#1a1414');
+    }
     staticLayer = cv.c;
     return staticLayer;
   }

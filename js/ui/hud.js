@@ -45,7 +45,13 @@
     },
     on(ev, fn) { HUD.offs.push(DG.on(ev, fn)); },
     toggleRubric() { HUD.rubric.classList.toggle('collapsed'); if (DG.profile) { DG.profile.rubricCollapsed = HUD.rubric.classList.contains('collapsed'); DG.store.save(); } },
-    setBanner(t, sub) { if (!HUD.el) return; HUD.banner.querySelector('.b1').textContent = t || ''; HUD.banner.querySelector('.sub').textContent = sub || ''; HUD.banner.style.display = t ? '' : 'none'; },
+    setBanner(t, sub) {
+      if (!HUD.el) return;
+      HUD.banner.querySelector('.b1').textContent = t || ''; HUD.banner.querySelector('.sub').textContent = sub || ''; HUD.banner.style.display = t ? '' : 'none';
+      // fora da Missa, o nome do lugar aparece ao entrar e depois se recolhe (não cobre o cenário)
+      clearTimeout(HUD._bannerT); HUD.banner.classList.remove('faded');
+      if (t && DG.game.state !== 'rite') HUD._bannerT = setTimeout(() => { if (DG.game.state !== 'rite') HUD.banner.classList.add('faded'); }, 5000);
+    },
     setTasks(title, list) {
       if (!HUD.el) return;
       if (!list) { HUD.tasks.style.display = 'none'; return; }

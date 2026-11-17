@@ -3,8 +3,6 @@
    Estética de livro litúrgico: pergaminho, rubricas em vermelho, ouro, vinho.
    ========================================================================== */
 
-@font-face { font-family: 'Cinzel'; src: url('../assets/fonts/Cinzel.ttf') format('truetype'); font-weight: 400 900; font-display: swap; }
-@font-face { font-family: 'Cinzel Decorative'; src: url('../assets/fonts/CinzelDecorative-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'EB Garamond'; src: url('../assets/fonts/EBGaramond.ttf') format('truetype'); font-weight: 400 800; font-style: normal; font-display: swap; }
 @font-face { font-family: 'EB Garamond'; src: url('../assets/fonts/EBGaramond-Italic.ttf') format('truetype'); font-weight: 400 800; font-style: italic; font-display: swap; }
 @font-face { font-family: 'Unifraktur'; src: url('../assets/fonts/UnifrakturMaguntia.ttf') format('truetype'); font-display: swap; }
@@ -27,8 +25,8 @@
   --blue: #1b2850;
   --night: #0b0806;
   --shadow: rgba(0,0,0,.55);
-  --f-title: 'Cinzel', 'Trajan Pro', Georgia, serif;
-  --f-deco: 'Cinzel Decorative', 'Cinzel', Georgia, serif;
+  --f-title: 'EB Garamond', Garamond, serif;
+  --f-deco: 'Unifraktur', 'Old English Text MT', serif;
   --f-body: 'EB Garamond', Garamond, 'Times New Roman', serif;
   --f-black: 'Unifraktur', 'Old English Text MT', serif;
 }
