@@ -1,0 +1,6 @@
+# Intermediário gerado por tools/extract-propers.js
+tools/propers.raw.json
+node_modules/
+.DS_Store
+Thumbs.db
+desktop.ini

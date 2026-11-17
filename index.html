@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deo Gratias</title>
+<meta name="description" content="Simulador da Santa Missa Tridentina segundo o Missal Romano de 1962.">
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div id="stage">
+  <canvas id="game" width="480" height="270"></canvas>
+  <div id="ui"></div>
+</div>
+<div id="boot" class="boot">
+  <div class="boot-inner">
+    <div class="boot-cross">✠</div>
+    <div class="boot-title">Deo Gratias</div>
+    <div class="boot-sub">Introibo ad altare Dei…</div>
+  </div>
+</div>
+
+<!-- núcleo -->
+<script src="js/core/dg.js"></script>
+<script src="js/core/storage.js"></script>
+<script src="js/core/input.js"></script>
+<!-- gráficos -->
+<script src="js/gfx/palette.js"></script>
+<script src="js/gfx/draw.js"></script>
+<script src="js/gfx/sprites.js"></script>
+<script src="js/gfx/characters.js"></script>
+<script src="js/gfx/fx.js"></script>
+<!-- áudio -->
+<script src="js/audio/audio.js"></script>
+<script src="js/audio/sfx.js"></script>
+<script src="js/audio/voice.js"></script>
+<script src="js/audio/chant.js"></script>
+<!-- dados -->
+<script src="js/data/propers.js"></script>
+<script src="js/data/chants.js"></script>
+<script src="js/data/ordo.js"></script>
+<script src="js/data/celebrations.js"></script>
+<script src="js/data/calendar.js"></script>
+<script src="js/data/objects.js"></script>
+<script src="js/data/manual.js"></script>
+<!-- mundo -->
+<script src="js/world/scene.js"></script>
+<script src="js/world/actor.js"></script>
+<script src="js/world/maps/common.js"></script>
+<script src="js/world/maps/church.js"></script>
+<script src="js/world/maps/sacristy.js"></script>
+<script src="js/world/maps/vestry.js"></script>
+<script src="js/world/maps/chapel.js"></script>
+<script src="js/world/maps/exterior.js"></script>
+<!-- rito -->
+<script src="js/rite/gestures.js"></script>
+<script src="js/rite/scoring.js"></script>
+<script src="js/rite/builder.js"></script>
+<script src="js/rite/engine.js"></script>
+<!-- interface -->
+<script src="js/ui/ui.js"></script>
+<script src="js/ui/notation.js"></script>
+<script src="js/ui/hud.js"></script>
+<script src="js/ui/book.js"></script>
+<script src="js/ui/screens.js"></script>
+<script src="js/ui/title.js"></script>
+<!-- jogo -->
+<script src="js/game/altarview.js"></script>
+<script src="js/game/prep.js"></script>
+<script src="js/game/game.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
