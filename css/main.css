@@ -40,7 +40,8 @@ body { font-family: var(--f-body); color: var(--ink); -webkit-font-smoothing: an
 #stage { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #000; box-shadow: 0 0 60px #000; }
 #game { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges; display: block; }
 #ui { position: absolute; inset: 0; pointer-events: none; font-size: calc(var(--u) * 6.2); line-height: 1.3; }
-#ui > * { pointer-events: auto; }
+/* :where() zera a especificidade: camadas como .fade, .hud, .tip e .toast-wrap podem deixar o clique passar */
+:where(#ui) > * { pointer-events: auto; }
 #ui .passthru { pointer-events: none; }
 #ui .passthru > * { pointer-events: auto; }
 
