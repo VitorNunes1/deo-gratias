@@ -88,7 +88,11 @@ h3 { font-size: 1.3em; } h4 { font-size: 1.1em; }
 .btn.small { font-size: .88em; padding: calc(var(--u) * .7) calc(var(--u) * 3); }
 
 /* ---------- tela inicial ---------- */
-.title-logo { top: 2.5%; }
+/* logo na coluna da esquerda, sobre o menu; a fachada da capela fica inteira à direita */
+.title-logo { top: 3%; left: 0; right: auto; width: 43%; }
+.title-logo .t1 { font-size: calc(var(--u) * 30) !important; }
+.title-logo .t2 { font-size: calc(var(--u) * 7) !important; }
+.title-logo .t3 { font-size: calc(var(--u) * 5.6) !important; line-height: 1.35; padding: 0 calc(var(--u) * 6); }
 .title-logo .t1 {
   font-family: var(--f-deco); font-size: calc(var(--u) * 34); letter-spacing: .02em; line-height: 1; color: var(--gold-hi);
   text-shadow: calc(var(--u) * .8) 0 0 #2a1205, calc(var(--u) * -.8) 0 0 #2a1205, 0 calc(var(--u) * .8) 0 #2a1205, 0 calc(var(--u) * -.8) 0 #2a1205,

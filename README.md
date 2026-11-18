@@ -2,7 +2,7 @@
 
 Jogo de navegador, em pixel art, que ensina a celebrar e a servir a Missa segundo o **Missale Romanum de 1962**.
 O jogador pode ser **sacerdote** ou **acólito**, da preparação na sacristia até o retorno depois das orações leoninas.
-O jogo se passa na **Capela São Pio X**, do Priorado Padre Anchieta da Fraternidade Sacerdotal São Pio X (FSSPX), em São Paulo. A tela inicial mostra o interior da capela, desenhado em pixel art a partir de uma fotografia.
+O jogo se passa na **Capela São Pio X**, do Priorado Padre Anchieta da Fraternidade Sacerdotal São Pio X (FSSPX), em São Paulo. A fachada da tela inicial e a capela onde se celebra foram desenhadas em pixel art a partir de fotografias da Capela São Pio X.
 
 ## Como abrir
 
@@ -30,7 +30,7 @@ Sem voz instalada, o texto avança no tempo estimado de leitura e o jogo continu
 | Celebrações | 27 Missas do ano litúrgico, com cores, paramentos, Próprios e cantos de cada dia |
 | Calendário | Calendário tradicional com precedência de 1962, que sugere a próxima celebração disponível |
 | Cenários | Nave e presbitério, altar-mor, sacristia, sala dos paramentos, capela de Nossa Senhora |
-| A capela | Emblema da FSSPX no retábulo, nos estandartes, na sacristia e na fachada · imagem de São Pio X · retratos de São Pio X e de Dom Lefebvre |
+| A capela | Fachada e interior da Capela São Pio X: nave branca de abóbada ogival, crucifixo de madeira, portas vermelhas em ogiva, altar de mármore com arcaria gótica · emblema da FSSPX na placa da fachada, na sacristia e na sala dos paramentos · imagem de São Pio X · retratos de São Pio X e de Dom Lefebvre |
 | Livro | Missal bilíngue, orações, folha de respostas do acólito, cantos em notação quadrada, manual e enciclopédia de objetos |
 | Avaliação | Rubrica, posição, respostas, tempo e reverência, com nota, lista de erros, histórico, conquistas e graus |
 

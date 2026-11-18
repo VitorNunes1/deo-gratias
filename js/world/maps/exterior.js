@@ -1,287 +1,196 @@
-/* DEO GRATIAS — tela inicial: interior da Capela São Pio X (Priorado Padre Anchieta, São Paulo)
-   Vista do fundo da nave para o altar, em perspectiva, desenhada a partir de uma fotografia
-   da capela: paredes de reboco creme, vitrais em arco com molduras de pedra, arandelas de
-   ferro, altar branco com frontal de renda, colunas de mármore verde, portas de madeira
-   escura, mesa de comunhão entalhada, piso de pedra clara e bancos de madeira. */
+/* DEO GRATIAS — tela inicial: fachada da Capela São Pio X (Priorado Padre Anchieta, São Paulo)
+   Desenhada a partir de fotografias da capela: fachada creme de frontão com cunhais ocre,
+   torre central com janela ogival e rosácea, dois janelões góticos com vitrais, alpendre
+   de madeira escura com a placa "CAPELA SÃO PIO X" e o emblema da Fraternidade, gradil de
+   ferro em losangos, calçada e árvores da rua. */
 (function (DG) {
   'use strict';
-  const G = DG.gfx, P = DG.pal, U = DG.util;
+  const G = DG.gfx, U = DG.util;
 
-  // ---------- perspectiva ----------
-  // mundo: X lateral (-240..240), Y altura (chão 0, teto 270), profundidade pela escala s
-  const VX = 240, VY = 150, SB = 0.5; // ponto de fuga e escala da parede do fundo
-  const sx = (X, s) => VX + X * s;
-  const sy = (Y, s) => VY + (120 - Y) * s;
-  const BW = { x0: sx(-240, SB), x1: sx(240, SB), y0: sy(270, SB), y1: sy(0, SB) }; // 120..360 × 15..210
-
+  const CX = 318, GY = 236;                   // eixo da capela e linha do chão
+  const FX0 = CX - 88, FX1 = CX + 88, EY = 138; // corpo da fachada e beiral
+  const TX0 = CX - 17, TX1 = CX + 17, TY = 58;  // torre
   const C = {
-    ceil: '#ddd0b0', ceil2: '#e9dfc6', wall: '#e8d9b4', wall2: '#d9c79c', wall3: '#c4ae82', back: '#eddfbd', back2: '#e2d1a8',
-    base: '#9c8664', floor: '#d3c7ab', floor2: '#c6b999', floorLine: '#b3a585',
-    stone: '#b8b4ac', stone2: '#8e8a84', wood: '#6e2a20', wood2: '#4e1a14', wood3: '#8a3a2a',
-    pew: '#7a4a2a', pew2: '#9a6438', pew3: '#4a2a16', rail: '#5a2a18', rail2: '#7a3e24',
-    marbleG: '#2f5a4e', marbleG2: '#1e3e36', marbleS: '#8a948c', marbleS2: '#6f7a74',
-    altar: '#f2efe6', altar2: '#d9d4c6', lace: '#fbf8f0', lace2: '#e4ddcc', iron: '#2a2220',
+    cream: '#ebe0c6', cream2: '#ddd0b0', cream3: '#c9b994',
+    ochre: '#c9973e', ochre2: '#a8782a', ochre3: '#e0b25a',
+    wood: '#3a2418', wood2: '#5a3a26', wood3: '#24160e', iron: '#1c1a1a', iron2: '#3a3634',
+    glass: ['#2f56b0', '#c23a3a', '#e8c040', '#3a8a4a', '#7a3a9a', '#6a8ee0'],
   };
 
-  // preenche colunas entre duas funções de y (polígonos limpos, sem antisserrilhado)
-  function cols(x, x0, x1, top, bot, col) {
-    for (let i = Math.floor(x0); i <= Math.ceil(x1); i++) {
-      const a = Math.round(top(i)), b = Math.round(bot(i));
-      if (b <= a) continue;
-      if (typeof col === 'function') { for (let j = a; j < b; j++) { const c = col(i, j); if (c) G.px(x, i, j, c); } }
-      else G.rect(x, i, a, 1, b - a, col);
+  // fonte de 3×5 pixels para a placa
+  const FONT = {
+    C: ['.11', '1..', '1..', '1..', '.11'], A: ['.1.', '1.1', '111', '1.1', '1.1'], P: ['11.', '1.1', '11.', '1..', '1..'],
+    E: ['111', '1..', '11.', '1..', '111'], L: ['1..', '1..', '1..', '1..', '111'], S: ['.11', '1..', '.1.', '..1', '11.'],
+    O: ['.1.', '1.1', '1.1', '1.1', '.1.'], I: ['111', '.1.', '.1.', '.1.', '111'], X: ['1.1', '1.1', '.1.', '1.1', '1.1'],
+  };
+  const textW = (str) => [...str].reduce((w, ch) => w + (ch === ' ' ? 3 : 4), 0) - 1;
+  function text(x, str, X, Y, col) {
+    let px0 = X;
+    for (const ch of str) {
+      if (ch === ' ') { px0 += 3; continue; }
+      const g = FONT[ch === 'Ã' ? 'A' : ch]; if (!g) { px0 += 4; continue; }
+      g.forEach((row, j) => { for (let i = 0; i < 3; i++) if (row[i] === '1') G.px(x, px0 + i, Y + j, col); });
+      if (ch === 'Ã') { G.px(x, px0, Y - 2, col); G.px(x, px0 + 1, Y - 3, col); G.px(x, px0 + 2, Y - 2, col); }
+      px0 += 4;
     }
   }
 
-  // ---------- vitral em arco numa parede lateral ----------
-  function sideWindow(x, side, s0, s1, seed) {
-    const sgn = side < 0 ? -1 : 1;
-    const X = 240 * sgn;
-    const xa = sx(X, s0), xb = sx(X, s1);
-    const lo = Math.min(xa, xb), hi = Math.max(xa, xb);
-    const z0 = 1 / s0, z1 = 1 / s1;
-    const Ylo = 112, Yhi = 206, R = 14; // peitoril, início do arco, raio do arco (em altura)
-    const pal = [['#2f56b0', '#6a8ee0', '#e8c040', '#c23a3a'], ['#3a8a4a', '#e8c040', '#c23a3a', '#5a7ad0'], ['#7a3a9a', '#e8c040', '#3a6ac0', '#d8d0c0']][seed % 3];
-    const frame = 3;
-    for (let i = Math.floor(lo) - frame; i <= Math.ceil(hi) + frame; i++) {
-      const s = (i - VX) / X; if (s <= 0) continue;
-      const z = 1 / s;
-      const u = (z - z0) / (z1 - z0); // 0..1 ao longo da janela
-      const inFrame = u > -0.08 && u < 1.08, inGlass = u >= 0 && u <= 1;
-      if (!inFrame) continue;
-      const arch = Math.sqrt(Math.max(0, 1 - (2 * U.clamp(u, 0, 1) - 1) ** 2));
-      const topY = Yhi + R * arch, topF = topY + 8;
-      const yT = Math.round(sy(inGlass ? topY : topF - 4, s)), yB = Math.round(sy(Ylo, s));
-      const yTF = Math.round(sy(topF, s)), yBF = Math.round(sy(Ylo - 6, s));
-      G.rect(x, i, yTF, 1, yBF - yTF, (u < 0.02 || u > 0.98) ? C.stone2 : C.stone); // moldura de pedra
-      if (!inGlass) continue;
-      for (let j = yT; j < yB; j++) {
-        const v = (j - yT) / Math.max(1, yB - yT);
-        let c;
-        if (u < 0.14 || u > 0.86 || v < 0.07 || v > 0.93) c = pal[(Math.floor(v * 9) + (u < 0.5 ? 0 : 1)) % 4];       // borda
-        else if (Math.abs(u - 0.5) < 0.2 && v > 0.36 && v < 0.88) c = (Math.abs(u - 0.5) < 0.06 && v < 0.6) ? '#f0e8d0' : pal[0]; // manto
-        else if (Math.abs(u - 0.5) < 0.1 && v > 0.24 && v <= 0.36) c = '#f0c8a0';                                       // rosto
-        else if (Math.hypot((u - 0.5) * 1.6, v - 0.3) < 0.16 && v < 0.3) c = '#f0d050';                                // auréola
-        else c = ((Math.floor(u * 6) + Math.floor(v * 10)) % 2) ? '#cfe0ec' : '#e2ecf2';                              // fundo claro
-        const lead = Math.abs(u - 0.14) < 0.025 || Math.abs(u - 0.86) < 0.025 || (Math.floor(v * 10) !== Math.floor((v + 1 / Math.max(1, yB - yT)) * 10) && (u < 0.14 || u > 0.86));
-        G.px(x, i, j, lead ? '#4a4450' : c);
-      }
-      G.px(x, i, yT, '#4a4450');
-    }
-    // peitoril
-    cols(x, lo - 2, hi + 2, (i) => sy(Ylo - 2, (i - VX) / X), (i) => sy(Ylo - 7, (i - VX) / X), C.stone2);
-  }
-
-  // arandela de ferro batido e quadrinho da via-sacra
-  function sconce(x, side, s) {
-    const X = 240 * side, px0 = sx(X, s), y = sy(176, s);
-    const k = Math.min(2, Math.max(1, Math.round(2 * s)));
-    const ox = Math.round(px0 - side * 3 * k);
-    G.line(x, px0, y + 3 * k, ox, y + k, C.iron); G.px(x, px0, y + 3 * k + 1, C.iron);
-    G.rect(x, ox - 1, y + k - 1, 3, 1, C.iron);
-    G.rect(x, ox, y - k, 1, k + 1, '#f4ecd8'); // vela elétrica
-    G.px(x, ox, y - k - 1, '#ffe7a0');
-  }
-  function station(x, side, s) {
-    const X = 240 * side, px0 = sx(X, s), y0 = sy(212, s), y1 = sy(184, s);
-    const w = Math.max(2, Math.round(10 * s));
-    for (let i = 0; i < w; i++) { const xx = Math.round(px0 - side * (2 + i)); G.rect(x, xx, Math.round(y0 + i * 0.12 * side * 0), 1, Math.round(y1 - y0), i === 0 || i === w - 1 ? '#a08040' : '#5a4a3a'); }
-  }
-
-  // ---------- banco visto de trás ----------
-  function pew(x, s, X0, X1) {
-    const xa = Math.round(sx(X0, s)), xb = Math.round(sx(X1, s));
-    const top = Math.round(sy(48, s)), mid = Math.round(sy(40, s)), bot = Math.round(sy(22, s));
-    G.rect(x, xa, top, xb - xa, bot - top, C.pew);
-    G.rect(x, xa, top, xb - xa, Math.max(1, Math.round(3 * s)), C.pew2);
-    G.hline(x, xa, mid, xb - xa, C.pew3);
-    G.rect(x, xa, bot, xb - xa, Math.max(1, Math.round(4 * s)), C.pew3);
-    // cabeceiras dos bancos: madeira com friso escuro, só até o assento
-    const ew = Math.max(2, Math.round(4 * s)), up = Math.max(1, Math.round(3 * s)), seat = Math.round(sy(18, s));
-    for (const ex of [xa - 1, xb - ew + 1]) { G.rect(x, ex, top - up, ew, seat - top + up, C.pew2); G.vline(x, ex === xa - 1 ? ex : ex + ew - 1, top - up, seat - top + up, C.pew3); G.hline(x, ex, top - up, ew, '#b07a48'); }
-  }
-  // fiel de costas: cabeça (com ou sem véu) e ombros
-  function person(x, s, X, kind, seed) {
-    const cx = Math.round(sx(X, s)), headY = Math.round(sy(70, s));
-    const r = Math.max(2, Math.round(9 * s)), sh = Math.round(22 * s);
-    const coat = ['#2a2a34', '#3a2a24', '#4a3a5a', '#5a2a2a', '#2e3a4a', '#6a5a4a'][seed % 6];
-    G.shape(x, cx - sh, headY + r - 1, sh * 2 + 1, Math.round(sy(46, s)) - headY - r + 2, (i, j) => Math.abs(i - sh) <= sh - Math.max(0, 4 - j) * 1.5, coat);
-    if (kind === 'veilW' || kind === 'veilB') {
-      const v = kind === 'veilW' ? ['#f4efe4', '#d9d0bf'] : ['#1e1a1c', '#3a3436'];
-      G.shape(x, cx - r - 2, headY - r, (r + 2) * 2 + 1, r * 3, (i, j) => { const d = Math.hypot(i - r - 2, (j - r) * 0.8); return (d <= r + 1 || (j > r && Math.abs(i - r - 2) <= r + 2 - (j - r) * 0.1)) ? (((i + j) % 3 === 0) ? v[1] : v[0]) : false; });
-    } else {
-      G.ellipse(x, cx, headY, r, r, ['#3a2618', '#1e1612', '#6a4a2a', '#8a8078'][seed % 4]);
-    }
+  // janelão ogival com moldura ocre e dois lumes de vitral
+  function gothicWindow(x, cx, top, w, h, seed) {
+    const X = cx - Math.floor(w / 2);
+    G.shape(x, X - 2, top - 2, w + 4, h + 4, G.gothicMask(w + 4, h + 4, Math.ceil((w + 4) / 2)), C.ochre);
+    G.shape(x, X - 1, top - 1, w + 2, h + 2, G.gothicMask(w + 2, h + 2, Math.ceil((w + 2) / 2)), C.ochre2);
+    const mask = G.gothicMask(w, h, Math.ceil(w / 2));
+    G.shape(x, X, top, w, h, (i, j) => {
+      if (!mask(i, j)) return false;
+      if (Math.abs(i - (w - 1) / 2) < 1 && j > h * 0.3) return '#4a4450';          // mainel
+      if (j % 9 === 0 || (i % 7 === 0 && j > h * 0.3)) return '#4a4450';           // chumbo
+      const fig = Math.abs(i - (i < w / 2 ? w * 0.25 : w * 0.75)) < w * 0.12 && j > h * 0.4;
+      if (fig) return j < h * 0.5 ? '#f0c8a0' : C.glass[(seed + (i < w / 2 ? 0 : 3)) % 6];
+      return C.glass[(Math.floor(i / 4) + Math.floor(j / 6) + seed) % 6];
+    });
+    G.ellipse(x, cx, top + Math.floor(h * 0.2), 2.5, 2.5, '#e8c040'); G.px(x, cx, top + Math.floor(h * 0.2), '#c23a3a');
   }
 
   let staticLayer = null;
   function buildStatic() {
     const cv = G.canvas(DG.W, DG.H), x = cv.x;
-    // teto
-    G.vgrad(x, 0, 0, DG.W, BW.y0 + 1, [C.ceil, C.ceil2]);
-    G.line(x, 0, 0, BW.x0, BW.y0, '#c4b490'); G.line(x, DG.W - 1, 0, BW.x1, BW.y0, '#c4b490');
-    for (const s of [0.62, 0.8]) { const y = Math.round(sy(270, s)); G.hline(x, Math.round(sx(-240, s)), y, Math.round(480 * s), '#cdbf9c'); G.hline(x, Math.round(sx(-240, s)), y + 1, Math.round(480 * s), '#efe6cf'); }
-    // paredes laterais
-    cols(x, 0, BW.x0, (i) => BW.y0 * i / BW.x0, (i) => 270 - (270 - BW.y1) * i / BW.x0, (i, j) => (j + i) % 7 === 0 && i < 60 ? C.wall2 : (i < 40 ? C.wall2 : C.wall));
-    cols(x, BW.x1, DG.W - 1, (i) => BW.y0 * (DG.W - 1 - i) / (DG.W - 1 - BW.x1), (i) => 270 - (270 - BW.y1) * (DG.W - 1 - i) / (DG.W - 1 - BW.x1), (i, j) => (j + i) % 7 === 0 && i > 420 ? C.wall2 : (i > 440 ? C.wall2 : C.wall));
-    // rodapé das paredes
-    cols(x, 0, BW.x0, (i) => 270 - (270 - BW.y1) * i / BW.x0 - Math.max(2, 8 * (1 - i / BW.x0 * 0.5)), (i) => 270 - (270 - BW.y1) * i / BW.x0, C.base);
-    cols(x, BW.x1, DG.W - 1, (i) => { const t = (DG.W - 1 - i) / (DG.W - 1 - BW.x1); return 270 - (270 - BW.y1) * t - Math.max(2, 8 * (1 - t * 0.5)); }, (i) => 270 - (270 - BW.y1) * (DG.W - 1 - i) / (DG.W - 1 - BW.x1), C.base);
-    // parede do fundo (presbitério)
-    G.vgrad(x, BW.x0, BW.y0, BW.x1 - BW.x0, BW.y1 - BW.y0, [C.back2, C.back, C.back]);
-    G.vline(x, BW.x0, BW.y0, BW.y1 - BW.y0, C.wall3); G.vline(x, BW.x1, BW.y0, BW.y1 - BW.y0, C.wall3);
-    G.hline(x, BW.x0, BW.y0, BW.x1 - BW.x0, '#c4b490');
-    // chão de pedra clara com juntas em perspectiva
-    cols(x, 0, DG.W - 1, (i) => i < BW.x0 ? 270 - (270 - BW.y1) * i / BW.x0 : i > BW.x1 ? 270 - (270 - BW.y1) * (DG.W - 1 - i) / (DG.W - 1 - BW.x1) : BW.y1, () => 270, (i, j) => ((i * 7 + j * 3) % 11 === 0 ? C.floor2 : C.floor));
-    for (let z = 1.9; z > 0.7; z -= 0.14) { const s = 1 / z; if (s <= SB) continue; const y = Math.round(sy(0, s)); G.hline(x, Math.round(sx(-240, s)), y, Math.round(480 * s), C.floorLine); }
-    for (let X = -240; X <= 240; X += 48) G.line(x, sx(X, SB), sy(0, SB), sx(X, 1.0), sy(0, 1.0), C.floorLine);
+    // céu claro de manhã
+    G.vgrad(x, 0, 0, DG.W, GY, ['#3f6fc4', '#5a88d4', '#7aa4e0', '#9cc0ea', '#bcd6f0']);
+    // prédios ao longe (São Paulo), bem esmaecidos
+    for (const [bx, bw, bh] of [[150, 26, 150], [178, 18, 120], [60, 30, 130], [96, 22, 100], [430, 30, 160], [462, 24, 110]]) {
+      G.rect(x, bx, GY - bh, bw, bh, '#a9bcd6');
+      for (let j = GY - bh + 4; j < GY - 10; j += 6) for (let i = bx + 3; i < bx + bw - 3; i += 5) G.rect(x, i, j, 2, 3, '#98aecb');
+    }
+    // vizinho à esquerda: prédio baixo cinza
+    G.rect(x, 104, 112, 92, GY - 112, '#4a4c52'); for (let j = 118; j < GY - 6; j += 5) G.hline(x, 104, j, 92, '#3e4046');
+    G.rect(x, 104, 108, 92, 4, '#5a5c62');
+    // árvores da rua à direita, com um jacarandá florido
+    const leaf = ['#2a5a2a', '#3a7a3a', '#4f8f44', '#6aa856'];
+    for (let k = 0; k < 120; k++) {
+      const a = U.hash2(k, 1) * Math.PI * 2, d = Math.sqrt(U.hash2(k, 2)) * 44;
+      G.ellipse(x, 452 + Math.cos(a) * d, 118 + Math.sin(a) * d * 0.8, 4 + U.hash2(k, 3) * 6, (4 + U.hash2(k, 3) * 6) * 0.85, leaf[Math.floor(U.hash2(k, 4) * 4)]);
+    }
+    for (let k = 0; k < 70; k++) { const a = U.hash2(k, 5) * Math.PI * 2, d = Math.sqrt(U.hash2(k, 6)) * 26; G.ellipse(x, 430 + Math.cos(a) * d, 92 + Math.sin(a) * d * 0.7, 2.5, 2, U.hash2(k, 7) > 0.5 ? '#8a6ac8' : '#a888e0'); }
+    G.rect(x, 448, 150, 6, GY - 150, '#4a3424'); G.rect(x, 430, 160, 4, GY - 160, '#4a3424');
 
-    // ---------- presbitério ----------
-    const fl = BW.y1; // linha do chão no fundo (210)
-    // tapete vermelho de padrão oriental diante do altar
-    cols(x, sx(-80, 0.56), sx(80, 0.56), (i) => sy(0, 0.515), (i) => sy(0, 0.585), (i, j) => {
-      const b = (j === Math.round(sy(0, 0.515)) || j === Math.round(sy(0, 0.585)) - 1 || i <= sx(-80, 0.56) + 1 || i >= sx(80, 0.56) - 1);
-      return b ? '#c9a043' : ((i + j * 2) % 6 === 0 ? '#e0b860' : (i + j) % 4 === 0 ? '#2a3a6a' : '#8a1c22');
-    });
-    // portas laterais de madeira escura com bandeira (vidro) e arco
-    for (const [dx, plaque] of [[BW.x0 + 6, false], [BW.x1 - 30, true]]) {
-      const w = 24, top = 84, bot = fl;
-      G.rect(x, dx - 2, top - 14, w + 4, 12, '#cfc3a6'); G.rect(x, dx, top - 12, w, 8, '#e8eef0'); G.vline(x, dx + w / 2, top - 12, 8, '#9aa4a8'); // bandeira
-      G.rect(x, dx - 2, top - 2, w + 4, bot - top + 2, '#5a2a1c');
-      G.rect(x, dx, top, w, bot - top, C.wood);
-      G.shape(x, dx + 2, top + 2, w - 4, 10, (i, j) => j >= 10 - Math.sqrt(Math.max(0, 1 - ((i - (w - 5) / 2) / ((w - 4) / 2)) ** 2)) * 10, C.wood3);
-      G.frame(x, dx + 3, top + 14, w - 6, bot - top - 20, C.wood2);
-      G.vline(x, dx + w / 2, top + 2, bot - top - 2, C.wood2);
-      if (plaque) { G.rect(x, dx + 7, top + 34, 10, 12, '#4a1a12'); G.frame(x, dx + 7, top + 34, 10, 12, '#a07040'); G.hline(x, dx + 9, top + 38, 6, '#c9a043'); G.hline(x, dx + 9, top + 41, 6, '#c9a043'); }
-      G.px(x, plaque ? dx + 4 : dx + w - 5, top + 60, '#c9a043');
-    }
-    // colunas de mármore verde ladeando o altar
-    for (const cx of [174, 306]) {
-      const top = 70, bot = fl;
-      G.rect(x, cx - 7, top, 14, 7, C.marbleG2); G.rect(x, cx - 6, top + 1, 12, 5, C.marbleG); G.hline(x, cx - 7, top + 7, 14, C.marbleG2); // capitel
-      G.rect(x, cx - 5, top + 8, 10, bot - top - 18, C.marbleS);
-      for (let j = top + 8; j < bot - 10; j++) { const v = Math.sin(j * 0.31 + cx) * 3; G.px(x, Math.round(cx + v), j, C.marbleS2); if (j % 5 === 0) G.px(x, Math.round(cx - v * 0.6 - 2), j, '#a4aca6'); }
-      G.vline(x, cx - 5, top + 8, bot - top - 18, '#a8b0aa'); G.vline(x, cx + 4, top + 8, bot - top - 18, C.marbleS2);
-      G.rect(x, cx - 7, bot - 10, 14, 10, C.marbleG); G.hline(x, cx - 7, bot - 10, 14, '#4a7a6a'); G.rect(x, cx - 8, bot - 3, 16, 3, C.marbleG2); // base
-    }
-    // altar: degrau, base de mármore branco com painéis escuros, frontal de renda
-    const AX0 = 196, AX1 = 284;
-    G.rect(x, AX0 - 10, fl - 5, AX1 - AX0 + 20, 5, '#d8d2c4'); G.hline(x, AX0 - 10, fl - 5, AX1 - AX0 + 20, '#f0ece2');
-    G.rect(x, AX0, fl - 28, AX1 - AX0, 23, C.altar); G.hline(x, AX0, fl - 28, AX1 - AX0, C.altar2);
-    for (let k = 0; k < 6; k++) { const px0 = AX0 + 9 + k * 14; G.rect(x, px0, fl - 22, 3, 13, '#2a2a2a'); G.px(x, px0 + 1, fl - 22, '#5a5a5a'); }
-    G.rect(x, AX1 - 2, fl - 34, 5, 29, C.altar); G.vline(x, AX1 + 2, fl - 34, 29, C.altar2); // coluninha lateral
-    G.rect(x, AX0 - 2, fl - 50, AX1 - AX0 + 4, 22, C.lace); // frontal de renda
-    for (let j = 0; j < 22; j++) for (let i = 0; i < AX1 - AX0 + 4; i++) { const p = ((i % 8) - 4) ** 2 + ((j % 8) - 4) ** 2; if (p > 6 && p < 12) G.px(x, AX0 - 2 + i, fl - 50 + j, C.lace2); }
-    G.hline(x, AX0 - 2, fl - 29, AX1 - AX0 + 4, C.lace2);
-    for (let i = 0; i < AX1 - AX0 + 4; i += 2) G.px(x, AX0 - 2 + i, fl - 28, C.lace2); // franja de renda
-    G.rect(x, AX0 - 4, fl - 52, AX1 - AX0 + 8, 3, '#f8f6f0'); // toalha sobre a mesa
-    // banquetas (degraus) com castiçais, flores, sacras e sacrário
-    G.rect(x, AX0 + 4, fl - 60, AX1 - AX0 - 8, 8, '#e4dccb'); G.hline(x, AX0 + 4, fl - 60, AX1 - AX0 - 8, '#f4efe4');
-    G.rect(x, AX0 + 12, fl - 66, AX1 - AX0 - 24, 6, '#d8cfbc'); G.hline(x, AX0 + 12, fl - 66, AX1 - AX0 - 24, '#ece6d8');
-    // sacras (cartas do altar) douradas
-    G.rect(x, 230, fl - 62, 20, 10, '#c9a043'); G.rect(x, 232, fl - 60, 16, 6, '#f2e8cc');
-    G.rect(x, AX0 + 10, fl - 59, 8, 7, '#c9a043'); G.rect(x, AX0 + 11, fl - 58, 6, 5, '#f2e8cc');
-    G.rect(x, AX1 - 18, fl - 59, 8, 7, '#c9a043'); G.rect(x, AX1 - 17, fl - 58, 6, 5, '#f2e8cc');
-    // sacrário com conopeu
-    G.rect(x, 232, fl - 88, 16, 22, '#c9a043'); G.rect(x, 233, fl - 87, 14, 20, '#e2b850');
-    G.shape(x, 230, fl - 92, 20, 6, (i, j) => j >= Math.abs(i - 9.5) * 0.6, '#c9a043');
-    G.rect(x, 234, fl - 85, 6, 18, '#f4f0e6'); G.rect(x, 240, fl - 85, 6, 18, '#b0202a'); // véu branco e vermelho
-    G.vline(x, 240, fl - 85, 18, '#7a141c');
-    // crucifixo sobre o sacrário
-    G.rect(x, 239, fl - 122, 3, 30, '#3a2416'); G.rect(x, 232, fl - 114, 17, 3, '#3a2416');
-    G.rect(x, 240, fl - 112, 1, 9, '#efdcc2'); G.rect(x, 234, fl - 113, 13, 1, '#efdcc2'); G.px(x, 240, fl - 114, '#efdcc2');
-    // castiçais dourados com velas
-    for (const cx of [204, 214, 224, 256, 266, 276]) {
-      const by = cx < 240 ? (cx === 204 ? fl - 60 : fl - 66) : (cx === 276 ? fl - 60 : fl - 66);
-      G.rect(x, cx - 2, by - 2, 4, 2, P.g3); G.hline(x, cx - 2, by - 2, 4, P.g5);
-      G.vline(x, cx - 1, by - 7, 5, P.g4); G.vline(x, cx, by - 7, 5, P.g2);
-      G.rect(x, cx - 2, by - 8, 4, 1, P.g5);
-      G.rect(x, cx - 1, by - 21, 2, 13, '#fbf8f0'); G.vline(x, cx, by - 21, 13, '#e4ddcc');
-    }
-    // arranjos de flores brancas e amarelas
-    for (const [fx, fy, r] of [[207, fl - 78, 7], [273, fl - 78, 7], [190, fl - 92, 9], [290, fl - 92, 9], [222, fl - 84, 5], [258, fl - 84, 5]]) {
-      G.rect(x, fx - 2, fy + r - 2, 5, 8, '#d0c8b4');
-      for (let k = 0; k < r * 14; k++) {
-        const a = U.hash2(fx + k, fy) * Math.PI * 2, d = Math.sqrt(U.hash2(k, fx)) * r;
-        const c = ['#ffffff', '#f4e27a', '#f0a830', '#fbf3d0', '#4a7a3a'][Math.floor(U.hash2(k * 3, fy) * 5)];
-        G.px(x, Math.round(fx + Math.cos(a) * d), Math.round(fy + Math.sin(a) * d * 0.9), c);
-      }
-    }
-    // mesa lateral com toalha roxa e branca (diante da porta da direita)
-    G.rect(x, BW.x1 - 40, fl - 20, 30, 18, '#f4f0e6');
-    for (let i = 0; i < 30; i += 4) { G.shape(x, BW.x1 - 40 + i, fl - 16, 4, 8, (a, b) => b >= Math.abs(a - 1.5) * 2, '#7a4a9a'); }
-    G.rect(x, BW.x1 - 40, fl - 21, 30, 2, '#ffffff');
-    // mesa de comunhão de madeira entalhada, com arcos
-    const sR = 0.6, railTop = Math.round(sy(40, sR)), railBot = Math.round(sy(0, sR));
-    for (const [X0, X1] of [[-240, -14], [14, 240]]) {
-      const xa = Math.round(sx(X0, sR)), xb = Math.round(sx(X1, sR));
-      G.rect(x, xa, railTop, xb - xa, 4, C.rail2); G.hline(x, xa, railTop, xb - xa, '#9a5a34');
-      G.rect(x, xa, railTop + 4, xb - xa, railBot - railTop - 4, '#00000000');
-      for (let i = xa; i < xb; i += 9) {
-        G.rect(x, i, railTop + 4, 2, railBot - railTop - 4, C.rail);
-        G.shape(x, i + 2, railTop + 4, 7, 7, (a, b) => Math.hypot(a - 3, b - 6.5) >= 3.2 && b < 6.5, C.rail);
-      }
-      G.rect(x, xa, railBot - 3, xb - xa, 3, C.rail);
-    }
-    G.rect(x, Math.round(sx(-14, sR)), railTop + 1, Math.round(28 * sR), 3, C.rail2); // portinhola
-    // lâmpada do Santíssimo (vermelha), pendente do teto
-    G.vline(x, 196, 0, 92, '#6a5a4a');
-    G.rect(x, 193, 92, 7, 2, P.g4); G.rect(x, 194, 94, 5, 6, '#a8141c'); G.rect(x, 195, 100, 3, 2, P.g3);
+    // ---------- fachada ----------
+    G.rect(x, FX0, EY, FX1 - FX0, GY - EY, C.cream);
+    const gH = 38; // frontão de duas águas que encontra a torre
+    for (let i = FX0; i <= TX0; i++) { const y = Math.round(EY - (i - FX0) * gH / (TX0 - FX0)); G.rect(x, i, y, 1, EY - y + 1, C.cream); G.rect(x, i, y - 3, 1, 3, C.ochre); G.px(x, i, y, C.ochre2); }
+    for (let i = TX1; i <= FX1; i++) { const y = Math.round(EY - (FX1 - i) * gH / (FX1 - TX1)); G.rect(x, i, y, 1, EY - y + 1, C.cream); G.rect(x, i, y - 3, 1, 3, C.ochre); G.px(x, i, y, C.ochre2); }
+    G.dither(x, FX0, EY, FX1 - FX0, GY - EY, C.cream2, 0.08);
+    G.hline(x, FX0, EY + 1, FX1 - FX0, C.cream3);
+    // cunhais ocre nos cantos
+    for (const px0 of [FX0, FX1 - 7]) { G.rect(x, px0, EY - 3, 7, GY - EY + 3, C.ochre); G.vline(x, px0 + (px0 === FX0 ? 6 : 0), EY - 3, GY - EY + 3, C.ochre2); G.vline(x, px0 + (px0 === FX0 ? 0 : 6), EY - 3, GY - EY + 3, C.ochre3); }
+    // torre central com faixas ocre
+    G.rect(x, TX0, TY, TX1 - TX0, 150 - TY, C.cream);
+    G.dither(x, TX0, TY, TX1 - TX0, 150 - TY, C.cream2, 0.06);
+    for (const px0 of [TX0, TX1 - 5]) { G.rect(x, px0, TY, 5, 152 - TY, C.ochre); G.vline(x, px0 + (px0 === TX0 ? 4 : 0), TY, 152 - TY, C.ochre2); }
+    G.rect(x, TX0 - 3, TY - 4, TX1 - TX0 + 6, 5, C.ochre); G.hline(x, TX0 - 3, TY - 4, TX1 - TX0 + 6, C.ochre3); G.hline(x, TX0 - 3, TY, TX1 - TX0 + 6, C.ochre2);
+    G.rect(x, TX0 - 1, TY - 7, TX1 - TX0 + 2, 3, C.cream2);
+    // cruz no alto da torre
+    G.rect(x, CX - 1, TY - 26, 3, 19, '#e8e2d2'); G.rect(x, CX - 6, TY - 20, 13, 3, '#e8e2d2'); G.vline(x, CX + 1, TY - 26, 19, '#b8b0a0'); G.hline(x, CX - 6, TY - 18, 13, '#b8b0a0');
+    // janela ogival da torre, com venezianas
+    G.shape(x, CX - 8, 68, 17, 38, G.gothicMask(17, 38, 9), C.cream3);
+    const tw = G.gothicMask(15, 36, 8);
+    G.shape(x, CX - 7, 69, 15, 36, (i, j) => tw(i, j) ? ((j % 3 === 0 && j > 8) ? '#4a4a5a' : '#262632') : false);
+    // rosácea
+    G.ellipse(x, CX, 122, 10, 10, C.ochre2); G.ellipse(x, CX, 122, 9, 9, C.cream3); G.ellipse(x, CX, 122, 8, 8, '#24346a');
+    for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2; G.line(x, CX, 122, CX + Math.cos(a) * 8, 122 + Math.sin(a) * 8, '#7a90c8'); }
+    G.ellipse(x, CX, 122, 2.5, 2.5, '#e8c040');
+    // janelões góticos com vitrais
+    gothicWindow(x, CX - 58, 148, 26, 64, 0);
+    gothicWindow(x, CX + 58, 148, 26, 64, 2);
 
-    // ---------- nave: vitrais, arandelas, via-sacra ----------
-    const wins = [[0.53, 0.58], [0.63, 0.7], [0.76, 0.87], [0.97, 1.18]];
-    wins.forEach(([a, b], k) => { sideWindow(x, -1, a, b, k); sideWindow(x, 1, a, b, k + 1); });
-    for (const s of [0.605, 0.73, 0.92]) { sconce(x, -1, s); sconce(x, 1, s); station(x, -1, s + 0.015); station(x, 1, s + 0.015); }
+    // ---------- alpendre de madeira com a placa ----------
+    const RY = 168;
+    G.shape(x, CX - 40, 146, 81, RY - 146 + 1, (i, j) => { const e = Math.abs(i - 40) * 0.55; return j >= e - 1 && j <= e + 4 ? (j <= e + 0.5 ? C.wood2 : C.wood) : false; });
+    G.shape(x, CX - 34, 152, 69, RY - 152, (i, j) => j >= Math.abs(i - 34) * 0.55 + 4 ? C.wood3 : false);
+    G.vline(x, CX, 153, RY - 153, C.wood2); G.line(x, CX - 30, RY - 1, CX, 156, C.wood2); G.line(x, CX + 30, RY - 1, CX, 156, C.wood2);
+    G.hline(x, CX - 36, RY, 73, C.wood2); G.hline(x, CX - 36, RY + 1, 73, C.wood);
+    for (const px0 of [CX - 35, CX + 32]) { G.rect(x, px0, RY + 2, 4, GY - RY - 2, '#2a2420'); G.vline(x, px0, RY + 2, GY - RY - 2, '#4a403a'); }
+    // porta aberta, com a luz da capela lá dentro
+    G.rect(x, CX - 18, 194, 37, GY - 194, '#3a2a1e');
+    G.vgrad(x, CX - 14, 196, 29, GY - 196, ['#8a6a44', '#c09060', '#e0b880']);
+    G.rect(x, CX - 18, 196, 4, GY - 196, '#5a3420'); G.rect(x, CX + 15, 196, 4, GY - 196, '#5a3420');
+    G.rect(x, CX - 2, 206, 5, 16, '#f0e4c8'); G.rect(x, CX - 1, 203, 3, 3, '#f0e4c8');
+    G.rect(x, CX, 198, 1, 6, '#5a3420'); G.rect(x, CX - 2, 199, 5, 1, '#5a3420');
+    // placa preta com o emblema e o nome em dourado
+    const sw = 66, sx0 = CX - sw / 2, sy0 = RY + 3;
+    G.rect(x, sx0, sy0, sw, 21, '#121010'); G.frame(x, sx0, sy0, sw, 21, '#a8822a'); G.frame(x, sx0 + 1, sy0 + 1, sw - 2, 19, '#2a2420');
+    DG.emblem.draw(x, CX, sy0 + 2, 11, 'goldFlat');
+    const label = 'CAPELA SÃO PIO X';
+    text(x, label, Math.round(CX - textW(label) / 2), sy0 + 14, '#e2c060');
 
-    // ---------- bancos e fiéis ----------
-    const rows = [];
-    for (let z = 1.56; z > 1.02; z -= 0.09) rows.push(1 / z);
-    const folk = { 0: [[-150, 'veilW'], [170, 'veilB']], 1: [[-185, 'm'], [140, 'veilW']], 2: [[-125, 'veilB'], [190, 'm']], 3: [[-170, 'veilW'], [120, 'm']], 4: [[-140, 'm'], [165, 'veilW']], 5: [[-190, 'veilW']] };
-    rows.forEach((s, r) => {
-      pew(x, s, -218, -34); pew(x, s, 34, 218);
-      (folk[r] || []).forEach(([X, kind], k) => person(x, s, X, kind, r * 3 + k));
-    });
+    // ---------- gradil de ferro em losangos ----------
+    const FY = 176;
+    const gap = (i) => i > CX - 36 && i < CX + 36; // portão aberto entre os pilares do alpendre
+    for (let i = 196; i < 446; i++) {
+      if (gap(i)) continue;
+      for (let j = FY + 3; j < GY - 2; j++) { if ((i + j) % 14 === 0 || (i - j + 1400) % 14 === 0) G.px(x, i, j, '#2a2626'); }
+      if (i % 14 === 0) { G.px(x, i, FY - 2, C.iron); G.px(x, i, FY - 1, C.iron); }
+    }
+    for (const [a, b] of [[196, CX - 36], [CX + 36, 446]]) { G.rect(x, a, FY, b - a, 2, C.iron); G.rect(x, a, GY - 3, b - a, 2, C.iron); for (let i = a + 42; i < b - 4; i += 42) G.rect(x, i, FY, 2, GY - FY, C.iron2); }
+    // pilar ocre à esquerda e portão alto de ferro à direita
+    G.rect(x, 184, 150, 12, GY - 150, C.ochre); G.vline(x, 195, 150, GY - 150, C.ochre2); G.rect(x, 182, 146, 16, 5, C.ochre3); G.hline(x, 182, 150, 16, C.ochre2);
+    G.shape(x, 446, 132, 30, GY - 132, (i, j) => { const top = 12 - Math.sqrt(Math.max(0, 1 - ((i - 14.5) / 15) ** 2)) * 12; if (j < top) return false; return (i === 0 || i === 29 || j < top + 2 || (i + j) % 8 === 0 || (i - j + 400) % 8 === 0) ? C.iron : false; });
+
+    // ---------- calçada ----------
+    G.rect(x, 0, GY, DG.W, DG.H - GY, '#a9a59c');
+    for (let j = GY + 4; j < DG.H; j += 7) G.hline(x, 0, j, DG.W, '#99958c');
+    for (let j = GY, k = 0; j < DG.H; j += 7, k++) for (let i = (k % 2) * 12; i < DG.W; i += 24) G.vline(x, i, j, 7, '#99958c');
+    G.rect(x, 0, 262, DG.W, 3, '#c4c0b6'); G.rect(x, 0, 265, DG.W, 5, '#5a5856');
+    // fiéis chegando para a Missa
+    const folk = [[CX - 30, 'veilW', '#3a3a4a'], [CX - 44, 'm', '#2a2a34'], [CX + 30, 'veilB', '#5a2a3a'], [CX + 42, 'veilW', '#2e3a5a'], [CX + 60, 'm', '#3a3428'], [CX - 64, 'veilW', '#6a4a3a']];
+    for (const [fx, kind, coat] of folk) {
+      const fy = GY + 18;
+      G.rect(x, fx - 3, fy - 13, 7, 13, coat); G.rect(x, fx - 2, fy, 2, 3, '#1a1a1a'); G.rect(x, fx + 1, fy, 2, 3, '#1a1a1a');
+      G.ellipse(x, fx, fy - 16, 2.5, 3, '#e2bd96');
+      if (kind === 'veilW') { G.rect(x, fx - 3, fy - 19, 7, 6, '#f4efe4'); G.px(x, fx - 3, fy - 13, '#f4efe4'); G.px(x, fx + 3, fy - 13, '#f4efe4'); }
+      else if (kind === 'veilB') G.rect(x, fx - 3, fy - 19, 7, 6, '#1e1a1c');
+      else G.rect(x, fx - 2, fy - 19, 5, 2, '#2a1a10');
+    }
+    // fios da rua, discretos
+    x.save(); x.globalAlpha = 0.35;
+    for (const [y0, y1, sag] of [[40, 70, 16], [52, 30, 10]]) for (let i = 0; i < DG.W; i++) { const t = i / DG.W; G.px(x, i, Math.round(y0 + (y1 - y0) * t + Math.sin(t * Math.PI) * sag), '#1a1a22'); }
+    x.restore();
     staticLayer = cv.c;
     return staticLayer;
   }
 
-  const motes = [];
+  const birds = [];
   DG.exterior = {
-    t: 0,
+    t: 0, nextBell: 1.5, rings: 0,
     render(x, t, dt) {
       if (!staticLayer) buildStatic();
       x.drawImage(staticLayer, 0, 0);
-      const fl = BW.y1;
-      // chamas das velas do altar e da lâmpada do Santíssimo
-      for (const cx of [204, 214, 224, 256, 266, 276]) {
-        const by = (cx === 204 || cx === 276) ? fl - 60 : fl - 66;
-        const f = Math.sin(t * 11 + cx) + Math.sin(t * 6.3 + cx * 2);
-        G.px(x, cx - 1 + (f > 1.2 ? 1 : 0), by - 23, P.flame2 || '#ffe7a0'); G.px(x, cx - 1, by - 22, P.flame0 || '#fff6d0');
-        if (f > -0.6) G.px(x, cx - 1, by - 24, P.flame1 || '#ffb040');
+      // nuvens claras à deriva (só no céu aberto)
+      x.save(); x.globalAlpha = 0.55;
+      for (let k = 0; k < 4; k++) {
+        const cx = ((t * (2 + k) + k * 150) % (DG.W + 120)) - 60, cy = 14 + k * 11;
+        if (cx > TX0 - 30 && cx < TX1 + 30) continue;
+        G.ellipse(x, cx, cy, 20 + k * 4, 4, '#ffffff'); G.ellipse(x, cx + 14, cy - 2, 12, 3, '#f4f8ff');
       }
-      const lf = 0.75 + Math.sin(t * 5) * 0.08 + Math.sin(t * 13) * 0.05;
-      x.save(); x.globalCompositeOperation = 'lighter';
-      const lg = x.createRadialGradient(196, 97, 0, 196, 97, 10); lg.addColorStop(0, 'rgba(255,60,40,' + (0.45 * lf) + ')'); lg.addColorStop(1, 'rgba(255,60,40,0)');
-      x.fillStyle = lg; x.fillRect(184, 85, 24, 24);
-      const ag = x.createRadialGradient(240, fl - 82, 0, 240, fl - 82, 60); ag.addColorStop(0, 'rgba(255,200,120,0.16)'); ag.addColorStop(1, 'rgba(255,200,120,0)');
-      x.fillStyle = ag; x.fillRect(180, fl - 142, 120, 120);
-      // luz do dia entrando pelos vitrais da esquerda
-      x.globalAlpha = 0.07;
-      x.fillStyle = '#fff2d0';
-      x.beginPath(); x.moveTo(30, 60); x.lineTo(60, 52); x.lineTo(250, 260); x.lineTo(170, 270); x.closePath(); x.fill();
-      x.beginPath(); x.moveTo(98, 92); x.lineTo(112, 88); x.lineTo(300, 230); x.lineTo(250, 236); x.closePath(); x.fill();
       x.restore();
-      // poeira na luz
-      if (motes.length < 40 && Math.random() < dt * 12) motes.push({ x: 60 + Math.random() * 200, y: 60 + Math.random() * 180, v: 2 + Math.random() * 3, a: 0, life: 6 + Math.random() * 6 });
-      for (let i = motes.length - 1; i >= 0; i--) {
-        const m = motes[i]; m.a += dt; m.y += m.v * dt * 0.4; m.x += Math.sin(m.a + i) * dt * 2;
-        const al = Math.min(1, m.a, m.life - m.a);
-        if (al <= 0) { motes.splice(i, 1); continue; }
-        x.globalAlpha = al * 0.5; G.px(x, m.x, m.y, '#fff6dc'); x.globalAlpha = 1;
+      // pássaros
+      if (Math.random() < dt * 0.2 && birds.length < 5) birds.push({ x: -10, y: 16 + Math.random() * 40, v: 18 + Math.random() * 14, ph: Math.random() * 6 });
+      for (let i = birds.length - 1; i >= 0; i--) {
+        const b = birds[i]; b.x += b.v * dt; b.ph += dt * 9;
+        const up = Math.sin(b.ph) > 0;
+        G.px(x, b.x, b.y, '#1a1418'); G.px(x, b.x - 1, b.y + (up ? -1 : 0), '#1a1418'); G.px(x, b.x + 1, b.y + (up ? -1 : 0), '#1a1418');
+        if (b.x > DG.W + 10) birds.splice(i, 1);
       }
-      // vinheta suave
-      x.drawImage(DG.fx.getVignette(), 0, 0);
+      // sol da manhã
+      x.save(); x.globalCompositeOperation = 'lighter';
+      const sun = x.createRadialGradient(80, 30, 0, 80, 30, 260); sun.addColorStop(0, 'rgba(255,240,200,0.14)'); sun.addColorStop(1, 'rgba(255,240,200,0)');
+      x.fillStyle = sun; x.fillRect(0, 0, DG.W, DG.H);
+      x.restore();
     },
-    update(dt) { this.t += dt; },
+    update(dt) {
+      this.t += dt;
+      this.nextBell -= dt;
+      if (this.rings < 3 && this.nextBell <= 0) { this.nextBell = 3.2; this.rings++; if (DG.sfx) DG.sfx.towerBell({ vol: 0.45 }); }
+    },
   };
 })(window.DG = window.DG || {});

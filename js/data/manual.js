@@ -29,7 +29,7 @@
 
   // ---------------- AS PARTES ----------------
   ch('fraternitas', 'A Santa Missa', 'A Capela São Pio X e a Fraternidade',
-    `<p>O jogo se passa na <b>Capela São Pio X</b>, uma capela da <b>Fraternidade Sacerdotal São Pio X</b> (FSSPX). O emblema da Fraternidade, dois corações entrelaçados sob uma coroa com a cruz, aparece no retábulo, nos estandartes, na sacristia e na fachada.</p>
+    `<p>O jogo se passa na <b>Capela São Pio X</b>, do Priorado Padre Anchieta da <b>Fraternidade Sacerdotal São Pio X</b> (FSSPX), na Vila Mariana, em São Paulo. A fachada e o interior foram desenhados em pixel art a partir de fotografias da capela: nave única branca de abóbada ogival, arco do presbitério sobre colunas de capitéis verdes, grande crucifixo de madeira, portas vermelhas em ogiva e altar de mármore branco com arcaria gótica. O emblema da Fraternidade, dois corações entrelaçados sob uma coroa com a cruz, está na placa da fachada.</p>
      <p>A Fraternidade foi fundada em 1970 por Dom <b>Marcel Lefebvre</b> (1905–1991), arcebispo missionário. Seu padroeiro é <b>São Pio X</b>, Papa de 1903 a 1914, cujo lema era “Instauráre ómnia in Christo”.</p>
      <p>As capelas da Fraternidade celebram a Missa segundo os livros litúrgicos de 1962, os mesmos que este jogo segue.</p>
      <div class="note">Este é um projeto independente de fiéis. Não é uma publicação oficial da Fraternidade Sacerdotal São Pio X.</div>`);

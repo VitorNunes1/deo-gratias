@@ -207,7 +207,7 @@
 
   // ---------------- a Fraternidade ----------------
   add('insigneFSSPX', 'Emblema da Fraternidade Sacerdotal São Pio X', 'insigne Fraternitatis Sacerdotalis Sancti Pii X', 'ecclesia', 'insigne',
-    'Dois corações entrelaçados, encimados por uma coroa com a cruz. Aparece aqui no coroamento do retábulo, nos estandartes do presbitério, na sacristia, na sala dos paramentos e na fachada.',
+    'Dois corações entrelaçados, encimados por uma coroa com a cruz. Aparece na placa da fachada da capela, sobre o nome “Capela São Pio X”, e também na sacristia e na sala dos paramentos.',
     'Identifica as casas e capelas da Fraternidade, como esta Capela São Pio X.',
     'Os dois corações representam a devoção aos Sagrados Corações de Jesus e de Maria. A coroa com a cruz evoca a realeza de Nosso Senhor.',
     '—');
