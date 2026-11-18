@@ -130,7 +130,27 @@
     return wave;
   }
 
+  // órgão de tubos (flautado de 8' e 4'): sóbrio, sem vibrato nem vogais sintéticas
+  let organWave = null;
+  function makeOrgan(ctx, dest, opts) {
+    if (!organWave) {
+      const amp = [0, 1, 0.42, 0.24, 0.12, 0.08, 0.05, 0.035, 0.02];
+      const real = new Float32Array(amp.length), imag = new Float32Array(amp);
+      organWave = ctx.createPeriodicWave(real, imag);
+    }
+    const o = ctx.createOscillator(); o.setPeriodicWave(organWave); o.detune.value = opts.detune || 0;
+    const lfo = ctx.createOscillator(); lfo.frequency.value = 0.1; // sem vibrato
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600; lp.Q.value = 0.4;
+    const nz = ctx.createBufferSource(); nz.buffer = A.noiseBuffer(); nz.loop = true; // leve sopro do tubo
+    const nf = ctx.createBiquadFilter(); nf.type = 'bandpass'; nf.frequency.value = 1800; nf.Q.value = 1.2;
+    const ng = ctx.createGain(); ng.gain.value = 0.004;
+    const env = ctx.createGain(); env.gain.value = 0.0001;
+    o.connect(lp); lp.connect(env); nz.connect(nf); nf.connect(ng); ng.connect(env); env.connect(dest);
+    return { o, lfo, nz, env, bank: [], organ: true, gain: opts.gain || 0.16, start(t) { o.start(t); lfo.start(t); nz.start(t); }, stop(t) { try { o.stop(t); lfo.stop(t); nz.stop(t); } catch (e) { /* ok */ } } };
+  }
+
   function makeVoice(ctx, dest, opts) {
+    if (opts.organ) return makeOrgan(ctx, dest, opts);
     const o = ctx.createOscillator();
     o.setPeriodicWave(voiceWave(ctx));
     o.detune.value = opts.detune || 0;
@@ -197,16 +217,19 @@
       const t0 = ctx.currentTime + 0.12;
       const bus = ctx.createGain(); bus.gain.value = opts.volume == null ? 1 : opts.volume;
       bus.connect(A.buses.music);
-      const nVoices = opts.solo ? 1 : 4;
+      const organ = DG.settings.chantTimbre !== 'voices';
+      const nVoices = organ ? 2 : opts.solo ? 1 : 4;
       const transpose = (score.base || 50) + (opts.transpose || 0) + (opts.solo && !score.fixedPitch ? 2 : 0);
       const voices = [];
       for (let k = 0; k < nVoices; k++) {
-        const v = makeVoice(ctx, bus, { detune: opts.solo ? 0 : (k - 1.5) * 5 + (Math.random() - 0.5) * 3, gain: (opts.solo ? 0.28 : 0.13) * (1 + (Math.random() - 0.5) * 0.15), vib: opts.solo ? 9 : 5 + Math.random() * 4 });
+        const v = organ
+          ? makeVoice(ctx, bus, { organ: true, detune: k === 1 ? 1200 : 0, gain: k === 1 ? 0.05 : (opts.solo ? 0.2 : 0.17) })
+          : makeVoice(ctx, bus, { detune: opts.solo ? 0 : (k - 1.5) * 5 + (Math.random() - 0.5) * 3, gain: (opts.solo ? 0.28 : 0.13) * (1 + (Math.random() - 0.5) * 0.15), vib: opts.solo ? 9 : 5 + Math.random() * 4 });
         voices.push(v);
       }
       // automação
       voices.forEach((v, k) => {
-        const lag = opts.solo ? 0 : (Math.random() - 0.5) * 0.025;
+        const lag = opts.solo || v.organ ? 0 : (Math.random() - 0.5) * 0.025;
         let lastSyl = -1, on = false;
         score.notes.forEach((n, i) => {
           const t = t0 + tl.times[i] + lag;
@@ -218,7 +241,7 @@
             const F = FORMANTS[(syl && syl.vowel) || 'a'];
             v.bank.forEach((b, k2) => b.frequency.setTargetAtTime(F[k2] * (1 + (k - 1.5) * 0.015), t, 0.03));
             // pequena articulação consonantal entre sílabas
-            if (on) { v.env.gain.setTargetAtTime(v.gain * 0.45, t - 0.035, 0.012); }
+            if (on) { v.env.gain.setTargetAtTime(v.gain * (v.organ ? 0.72 : 0.45), t - 0.035, 0.012); }
             v.env.gain.setTargetAtTime(v.gain, t, on ? 0.02 : 0.06);
             on = true; lastSyl = n.syl;
           }

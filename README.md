@@ -16,9 +16,12 @@ Para jogar sem internet, baixe o projeto e siga estes passos:
 A versão baixada não precisa de internet, servidor nem instalação. Fontes, textos e melodias estão todos na pasta do projeto.
 O progresso é salvo automaticamente no próprio navegador. Em **Configurações** é possível exportar ou apagar o salvamento.
 
-**Voz em latim.** O jogo usa as vozes de síntese do sistema. A pronúncia eclesiástica fica muito melhor com uma voz **italiana**:
-no Windows, abra *Configurações › Hora e idioma › Fala › Adicionar vozes* e instale *Italiano*.
-Sem voz instalada, o texto avança no tempo estimado de leitura e o jogo continua normalmente.
+**Voz em latim.** O jogo usa só vozes masculinas. O latim sai com a pronúncia romana correta numa voz italiana.
+A melhor é a voz natural **“Diego”, que o Microsoft Edge já traz**, sem instalar nada. Para ouvir o latim certo, abra o jogo no Edge.
+No Chrome, o Windows costuma ter só a voz portuguesa “Daniel”. O jogo a usa, mas a pronúncia do latim fica aproximada.
+Também é possível instalar a voz italiana do Windows em *Configurações › Hora e idioma › Fala › Adicionar vozes*.
+Sem nenhuma voz masculina, as orações aparecem só em texto e o jogo continua normalmente.
+O canto gregoriano soa em órgão; em Configurações dá para trocar pela schola sintética.
 
 ## O que o jogo oferece
 

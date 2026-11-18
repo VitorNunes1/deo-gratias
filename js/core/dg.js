@@ -71,7 +71,7 @@
   // ---------- configuração padrão ----------
   DG.defaultSettings = () => ({
     volMaster: 0.9, volMusic: 0.7, volSfx: 0.8, volVoice: 1.0, volAmbient: 0.6,
-    tts: true, ttsSecreta: false, voicePriest: '', voiceServer: '', ttsRate: 0.92,
+    tts: true, ttsSecreta: false, chantTimbre: 'organ', voicePriest: '', voiceServer: '', ttsRate: 0.92,
     showLatin: true, showTrans: true, textMode: 'both', // both | latin | pt
     autoRecite: true,        // orações avançam sozinhas
     pace: 'normal',          // contemplativo | normal | rapido

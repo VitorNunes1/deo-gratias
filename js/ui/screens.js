@@ -195,7 +195,7 @@
       const toggle = (label, obj, key, help) => h('div', { class: 'toggle-row' }, h('span', null, label, help ? h('div', { class: 'small muted' }, help) : null), h('input', { type: 'checkbox', checked: obj[key] ? true : null, onchange: (e) => { obj[key] = e.target.checked; save(); } }));
       const seg = (label, key, opts) => h('div', { class: 'field' }, h('label', null, label), h('div', { class: 'seg' }, opts.map(([k, n]) => { const b = h('button', { class: s[key] === k ? 'on' : '', onclick: () => { s[key] = k; b.parentNode.querySelectorAll('button').forEach(x => x.classList.remove('on')); b.classList.add('on'); save(); } }, n); return b; })));
       const voiceSel = (label, key, role) => {
-        const sel = h('select', { onchange: (e) => { s[key] = e.target.value; save(); } }, h('option', { value: '' }, 'Automática (' + ((DG.voice.pick(role) || {}).name || 'nenhuma') + ')'), DG.voice.voices.map(v => h('option', { value: v.name, selected: s[key] === v.name ? true : null }, v.name + ' — ' + v.lang)));
+        const sel = h('select', { onchange: (e) => { s[key] = e.target.value; save(); } }, h('option', { value: '' }, 'Automática (' + ((DG.voice.pick(role) || {}).name || 'nenhuma voz masculina') + ')'), DG.voice.maleVoices().map(v => h('option', { value: v.name, selected: s[key] === v.name ? true : null }, v.name + ' — ' + v.lang)));
         return h('div', { class: 'field' }, h('label', null, label), h('div', { class: 'row' }, sel, h('button', { class: 'btn small', onclick: () => { DG.audio.unlock(); DG.voice.speak(role === 'priest' ? 'Dóminus vobíscum. Introíbo ad altáre Dei.' : 'Et cum spíritu tuo. Ad Deum, qui lætíficat juventútem meam.', { role }); } }, '▶')));
       };
       const d = DG.voice.describe();
@@ -208,8 +208,15 @@
             toggle('Ler as orações em voz alta (síntese de fala)', s, 'tts'),
             toggle('Ler também as orações secretas (em voz baixa)', s, 'ttsSecreta', 'Na Missa real elas são ditas em silêncio.'),
             toggle('Canto ambiente nos menus e na exploração', s, 'ambientChant'),
+            seg('Som do canto gregoriano', 'chantTimbre', [['organ', 'Órgão'], ['voices', 'Schola sintética']]),
             voiceSel('Voz do sacerdote', 'voicePriest', 'priest'), voiceSel('Voz do acólito', 'voiceServer', 'server'),
-            h('p', { class: 'small muted' }, d.italian ? 'Há voz italiana instalada: a pronúncia será a romana.' : 'Nenhuma voz italiana encontrada: a pronúncia do latim será aproximada. No Windows, instale o idioma Italiano (Configurações → Hora e idioma → Fala) ou use o navegador Edge.')),
+            h('p', { class: 'small' + (d.quality === 'best' || d.quality === 'good' ? ' muted' : ' rubric') }, {
+              best: 'Voz italiana masculina natural: o latim sai com a pronúncia romana.',
+              good: 'Voz italiana masculina: o latim sai com a pronúncia romana.',
+              fair: 'Voz espanhola masculina: o latim fica próximo do romano. Para o melhor resultado, abra o jogo no Microsoft Edge, que tem a voz italiana masculina natural “Diego”.',
+              poor: 'Voz portuguesa: o latim fica aproximado, porque o português fecha os finais em “i” e “u”. Para o latim correto, abra o jogo no Microsoft Edge: ele tem a voz italiana masculina natural “Diego”, sem instalar nada. Outra opção é instalar a voz italiana do Windows (Configurações → Hora e idioma → Fala).',
+              none: 'Nenhuma voz masculina encontrada: as orações aparecem só em texto. Abra o jogo no Microsoft Edge para ouvir a voz italiana masculina “Diego”.',
+            }[d.quality])),
           h('div', null,
             h('h3', null, 'Texto e jogo'),
             seg('Texto das orações', 'textMode', [['both', 'Latim + tradução'], ['latin', 'Latim'], ['pt', 'Tradução']]),
