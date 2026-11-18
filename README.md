@@ -2,7 +2,7 @@
 
 Jogo de navegador, em pixel art, que ensina a celebrar e a servir a Missa segundo o **Missale Romanum de 1962**.
 O jogador pode ser **sacerdote** ou **acólito**, da preparação na sacristia até o retorno depois das orações leoninas.
-O jogo se passa na **Capela São Pio X**, uma capela da Fraternidade Sacerdotal São Pio X (FSSPX).
+O jogo se passa na **Capela São Pio X**, do Priorado Padre Anchieta da Fraternidade Sacerdotal São Pio X (FSSPX), em São Paulo. A tela inicial mostra o interior da capela, desenhado em pixel art a partir de uma fotografia.
 
 ## Como abrir
 
