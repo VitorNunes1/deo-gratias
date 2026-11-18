@@ -85,6 +85,7 @@
   const SEL = ['ooooooo', '.ogggo.', '..ogo..', '...o...'];
   const SEL_DARK = ['ddddddd', '.ddddd.', '..ddd..', '...d...'];
   const CHECK = ['..rr..', '..rr..', 'rrrrrr', 'rrrrrr', '..rr..', '..rr..'];
+  const DOWN = ['.ooooooo.', '.ohhhhho.', '.ohgggho.', 'oohgggoo', 'ohgggggho', '.ohgggho.', '..ohgho..', '...ogo...', '....o....'];
 
   const url = (c) => 'url(' + c.toDataURL('image/png') + ')';
   let lastK = 0;
@@ -107,6 +108,7 @@
       R.setProperty('--sel-arrow', url(scaleUp(ascii(SEL_DARK, PAL), k)));
       R.setProperty('--sel-arrow-gold', url(scaleUp(ascii(SEL, PAL), k)));
       R.setProperty('--chk', url(scaleUp(ascii(CHECK, PAL), k)));
+      R.setProperty('--ptr-down', url(scaleUp(ascii(DOWN, PAL), k)));
       // cursores: tamanho fixo (2x) para não passar do limite dos navegadores
       R.setProperty('--cur', url(scaleUp(ascii(ARROW, PAL), 2)) + ' 1 1, auto');
       R.setProperty('--cur-hand', url(scaleUp(ascii(HAND, PAL), 2)) + ' 10 2, pointer');

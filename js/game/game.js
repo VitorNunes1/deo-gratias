@@ -62,6 +62,7 @@
       const carry = GM.player && GM.player.base.carry;
       if (carry !== GM._lastCarry) { GM._lastCarry = carry; DG.hud.setHands(carry); }
       GM.updatePrompt();
+      if (DG.guide && (GM.state === 'prep' || GM.state === 'rite')) DG.guide.update(); else if (DG.hud.setCoach) DG.hud.setCoach(null);
     },
     render() {
       const x = GM.ctx;
@@ -91,18 +92,8 @@
     drawAltarGlow() {},
     // alvo de deslocamento (dica) e marcador do jogador
     drawWorldOverlay(x, cam) {
-      const e = GM.engine;
-      if (e && e.need && (e.need.type === 'go' || e.need.type === 'kneel') && (e.hintsOn || e.need.lateMarked || DG.hud.forceHint)) {
-        const name = e.need.type === 'go' ? e.need.to : e.need.el.at;
-        const p = name && GM.scene.points[name];
-        if (p) {
-          const sx = p.x - cam.x, sy = p.y - cam.y;
-          const r = 6 + Math.sin(GM.t * 5) * 1.5;
-          x.save(); x.globalAlpha = 0.8;
-          G.shape(x, sx - r, sy - r / 2, r * 2 + 1, r + 1, (i, j) => { const dx = (i - r) / r, dy = (j - r / 2) / (r / 2); const d = dx * dx + dy * dy; return d <= 1 && d >= 0.55; }, '#f1d887');
-          x.restore();
-        }
-      }
+      // guia: anel no chão, seta sobre o alvo e seta na borda quando o alvo está fora da tela
+      if (DG.guide && (GM.state === 'prep' || GM.state === 'rite')) DG.guide.draw(x, cam, GM.t);
       if (GM.player && GM.state !== 'rite') GM.player.marker = true; else if (GM.player) GM.player.marker = false;
     },
     // ---------------- câmera ----------------
@@ -248,7 +239,7 @@
       const sc = GM.scene, p = GM.player;
       for (const dr of sc.doors) if (dr.to && p.x >= dr.x - 2 && p.x <= dr.x + dr.w + 2 && p.y >= dr.y && p.y <= dr.y + dr.h) {
         if (GM.state === 'rite') return;
-        if ((dr.x < 20 && p.x < dr.x + dr.w) || (dr.x > sc.w - 40 && p.x > dr.x)) { if (!GM.prep || GM.prep.canLeave(sc.id, dr.to)) GM.goScene(dr.to, dr.spawn); return; }
+        if ((dr.x < 20 && p.x < dr.x + dr.w) || (dr.x > sc.w - 40 && p.x > dr.x) || (dr.top && p.y < dr.y + dr.h - 3)) { if (!GM.prep || GM.prep.canLeave(sc.id, dr.to)) GM.goScene(dr.to, dr.spawn); return; }
       }
     },
     async goScene(id, spawn, opts) {
@@ -351,7 +342,7 @@
       await DG.ui.fade(true);
       GM.loadScene('church', 'sacristyDoor', { withBoth: true });
       GM.scene.actors = [P, M, ...GM.faithful];
-      M.x = 470; M.y = 214; P.x = 486; P.y = 218;
+      { const d = GM.scene.points.sacristyDoor; M.x = d.x + 10; M.y = d.y + 2; P.x = d.x - 6; P.y = d.y + 6; }
       P.followPlayer = M.followPlayer = false;
       GM.faithfulPose('stand');
       await DG.ui.fade(false);
@@ -363,7 +354,7 @@
       if (inst) return;
       GM.cutscene = true;
       GM.faithfulPose('stand');
-      await Promise.all([M.walkTo(470, 214), DG.wait(0.5).then(() => P.walkTo(452, 218))]);
+      { const d = GM.scene.points.sacristyDoor; await Promise.all([M.walkTo(d.x + 8, d.y - 6), DG.wait(0.5).then(() => P.walkTo(d.x - 6, d.y + 2))]); }
       DG.sfx.door(true);
       await DG.ui.fade(true);
       P.scene = M.scene = 'sacristy';
@@ -430,6 +421,7 @@
         h('p', null, priest
           ? 'Você vai celebrar uma Missa rezada dominical, da sacristia à sacristia. Primeiro, prepare-se: marque o Missal, lave as mãos, prepare o cálice e reveste-se na sala ao lado, escolhendo a cor do dia. Depois, no altar, siga as rubricas.'
           : 'Você vai servir uma Missa rezada dominical. Primeiro, prepare a sacristia e o altar (veja a lista à direita). Depois, no altar, responda em latim, ajoelhe-se do lado oposto ao Missal, transporte-o, apresente as galhetas e toque a campainha.'),
+        h('div', { class: 'note' }, h('b', null, 'Siga o quadro “Agora”, no alto da tela: '), 'ele diz o que fazer e qual tecla apertar. Uma ', h('b', null, 'seta dourada'), ' mostra o lugar ou o objeto; se ele estiver em outra sala, a seta aponta a porta. O botão certo pisca na barra de baixo.'),
         h('h4', null, 'Como ler a tela'),
         h('p', null, h('b', null, 'Painel vermelho (à esquerda): '), 'a rubrica — o que o Missal manda fazer agora, com a fonte. A linha “➤” diz a ação esperada e a tecla.'),
         h('p', null, h('b', null, 'Caixa inferior: '), 'o texto em latim (com a tradução). As orações do sacerdote avançam sozinhas; F pula a leitura.'),

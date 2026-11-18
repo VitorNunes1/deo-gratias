@@ -25,7 +25,7 @@ Sem voz instalada, o texto avança no tempo estimado de leitura e o jogo continu
 | Item | Conteúdo |
 | --- | --- |
 | Papéis | Sacerdote e acólito, cada um com suas rubricas, gestos e respostas |
-| Modos | Tutorial guiado · Treino, que começa em qualquer parte da Missa · Celebração completa e avaliada |
+| Modos | Tutorial guiado, com o quadro “Agora / Como” e setas que mostram onde ir e o que apertar · Treino, que começa em qualquer parte da Missa · Celebração completa e avaliada |
 | Formas | Missa rezada completa · Missa cantada sem incenso, liberada no modo Celebração depois de uma Missa completa |
 | Celebrações | 27 Missas do ano litúrgico, com cores, paramentos, Próprios e cantos de cada dia |
 | Calendário | Calendário tradicional com precedência de 1962, que sugere a próxima celebração disponível |

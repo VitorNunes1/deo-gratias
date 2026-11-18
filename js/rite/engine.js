@@ -528,8 +528,9 @@
       if (!mid && this.cross.inMid) {
         this.cross.inMid = false;
         const side = me.x < sc.CX ? -1 : 1;
-        // atravessou de um lado ao outro sem genuflectir (exceto quando sobe ao supedâneo para a Consagração)
-        const exempt = this.step && /hancIgitur|quamOblationem|consecratio|orationesAnte|communio/.test(this.step.id);
+        // atravessou de um lado ao outro sem genuflectir (exceto quando sobe ao supedâneo para a Consagração,
+        // e na chegada e no retorno: entrando pela porta da sacristia, do lado do Evangelho, a genuflexão é a que se faz com o sacerdote ao pé do altar)
+        const exempt = this.step && /hancIgitur|quamOblationem|consecratio|orationesAnte|communio|processio|adventus|recessus/.test(this.step.id);
         if (side !== this.cross.from && !this.cross.genu && !exempt && !me.anim) {
           this.wrong('reverencia', 'Passou pelo meio do altar sem genuflectir.', 'O acólito genuflecte (no chão) sempre que passa diante do meio do altar.', { once: 'mid' + this.stepIdx + '_' + Math.round(DG.time.now) });
         }

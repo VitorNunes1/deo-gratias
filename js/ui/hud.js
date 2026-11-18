@@ -26,12 +26,14 @@
       HUD.tasks = h('div', { class: 'hud-tasks panel', style: { display: 'none' } });
       HUD.hands = h('div', { class: 'hud-hand' });
       HUD.score = h('div', { class: 'hud-score' });
+      HUD.coach = h('div', { class: 'hud-coach', style: { display: 'none' } }, h('div', { class: 'c-label' }, 'Agora'), h('div', { class: 'c-what' }), h('div', { class: 'c-how' }));
+      HUD.coachKey = '';
       HUD.corner = h('div', { class: 'hud-corner' },
         h('button', { class: 'ibtn', title: 'Missal e livro de orações (M)', onclick: () => DG.book.open('missal') }, '✠'),
         h('button', { class: 'ibtn', title: 'Manual litúrgico (L)', onclick: () => DG.book.open('manual') }, 'L'),
         h('button', { class: 'ibtn', title: 'Objetos litúrgicos (O)', onclick: () => DG.book.open('objects') }, 'O'),
         h('button', { class: 'ibtn', title: 'Pausa (Esc)', onclick: () => DG.screens.pause() }, 'II'));
-      el.append(HUD.banner, HUD.progress, HUD.rubric, HUD.tasks, HUD.dialog, HUD.choices, HUD.actions, HUD.promptEl, HUD.hands, HUD.score, HUD.corner);
+      el.append(HUD.banner, HUD.progress, HUD.rubric, HUD.tasks, HUD.coach, HUD.dialog, HUD.choices, HUD.actions, HUD.promptEl, HUD.hands, HUD.score, HUD.corner);
       DG.ui.root.insertBefore(el, DG.ui.root.firstChild);
       if (mode !== 'rite') { HUD.rubric.style.display = 'none'; HUD.progress.style.display = 'none'; }
       if (DG.profile && DG.profile.rubricCollapsed) HUD.rubric.classList.add('collapsed');
@@ -209,7 +211,7 @@
       const show = engine.hintsOn || need.lateMarked || HUD.forceHint;
       if (show) {
         hint.innerHTML = '➤ ' + DG.ui.esc(engine.needText(need)) + (need.type === 'g' ? ' <span class="kbd">' + DG.input.keyLabel((DG.GEST.BY[need.g] || {}).key || '') + '</span>' : need.type === 'actM' || need.type === 'recite' ? ' <span class="kbd">E</span>' : '');
-        if (need.type === 'g') HUD.highlight(need.g); else if (need.type === 'act') HUD.highlight(null, need.a);
+        if (need.type === 'g') HUD.highlight(need.g); else if (need.type === 'act') HUD.highlight(null, need.a); else if (need.type === 'kneel') HUD.highlight('ajoelhar');
       } else hint.textContent = '';
     },
     setWindows(ws, engine) {
@@ -238,6 +240,20 @@
       HUD.promptEl.style.top = (sy / DG.H * 100) + '%';
     },
     setScore(text) { if (HUD.el) HUD.score.textContent = text || ''; },
+    // quadro do guia: o que fazer agora e como (tecla, botão, lugar)
+    setCoach(c) {
+      if (!HUD.el || !HUD.coach) return;
+      if (!c) { if (HUD.coachKey) { HUD.coach.style.display = 'none'; HUD.coachKey = ''; } return; }
+      const key = c.what + '|' + c.how;
+      if (key === HUD.coachKey) return;
+      HUD.coachKey = key;
+      HUD.coach.querySelector('.c-label').textContent = c.idle ? 'Acompanhe' : 'Agora';
+      HUD.coach.querySelector('.c-what').textContent = c.what;
+      HUD.coach.querySelector('.c-how').innerHTML = c.how;
+      HUD.coach.classList.toggle('idle', !!c.idle);
+      HUD.coach.style.display = '';
+      HUD.coach.classList.remove('pop'); void HUD.coach.offsetWidth; HUD.coach.classList.add('pop');
+    },
     listen() {
       HUD.on('rite:step', (d) => HUD.setStep(d.step, d.idx, d.total, d.engine));
       HUD.on('rite:need', (n) => HUD.setNeed(n, DG.game.engine));

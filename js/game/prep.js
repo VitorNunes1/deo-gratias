@@ -101,7 +101,7 @@
       const t = this.role === 'sacerdos'
         ? 'Prepare-se para celebrar: as tarefas estão à direita. Ande com WASD/setas ou clique; use E para interagir. A cor do dia é: ' + DG.LIT[this.cel.color].name.toLowerCase() + '.'
         : 'Prepare a Missa: as tarefas estão à direita. Ande com WASD/setas ou clique; E para interagir; K ajoelha; 5 genuflecte.';
-      DG.ui.toast(t, 'info');
+      if (this.mode !== 'tutorial') DG.ui.toast(t, 'info');
     }
     refresh() { DG.hud.setTasks(this.role === 'sacerdos' ? 'Preparação do celebrante' : 'Preparação do acólito', this.tasks); }
     done(id) { const t = this.tasks.find(t => t.id === id); if (t && !t.done) { t.done = true; this.score.good('rubrica'); DG.sfx.ok2(); this.refresh(); this.checkAll(); } }

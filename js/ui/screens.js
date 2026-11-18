@@ -93,7 +93,7 @@
       const panel = h('div', { class: 'panel', style: { width: 'calc(var(--u)*330)' } },
         h('h2', null, 'Modo de jogo — ' + ROLE_NAMES[o.role]), h('div', { class: 'sep' }),
         h('div', { class: 'cards' },
-          opt('tutorial', 'Tutorial guiado', 'Uma Missa dominical completa com todas as dicas visíveis, as respostas assinaladas e sem pressa: ideal para a primeira vez.'),
+          opt('tutorial', 'Tutorial guiado', 'Uma Missa dominical completa, sem pressa, com um guia passo a passo: o quadro “Agora” diz o que fazer e qual tecla apertar, e uma seta dourada mostra onde. Ideal para a primeira vez.'),
           opt('treino', 'Treino', 'Escolha a celebração e, se quiser, comece numa parte específica (Ofertório, Cânon, Comunhão…). Dicas visíveis; os erros são explicados.'),
           opt('celebracao', 'Celebração completa', 'Da sacristia à sacristia, sem dicas (salvo se o rito ficar parado). Avaliação rigorosa e registro no histórico.')),
         h('div', { class: 'field', style: { marginTop: '1em' } }, h('label', null, 'Forma da Missa'),

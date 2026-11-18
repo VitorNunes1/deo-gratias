@@ -228,8 +228,11 @@ input[type=checkbox]:checked { background: #f7efd9 var(--chk) center / calc(var(
 .hud-actions .grp + .grp { border-left: calc(var(--u) * .5) solid rgba(201, 160, 67, .35); }
 .act { border-radius: 0; background: var(--brown-2); border: calc(var(--u) * .5) solid rgba(201, 160, 67, .55); box-shadow: inset calc(var(--u) * .5) calc(var(--u) * .5) 0 rgba(255, 230, 170, .08), inset calc(var(--u) * -.5) calc(var(--u) * -.5) 0 rgba(0, 0, 0, .4); }
 .act:hover, .act.focus { background: var(--brown-3); border-color: var(--gold-hi); }
-.act.hint { border-color: var(--gold-hi); box-shadow: 0 0 0 calc(var(--u) * .6) var(--gold-hi); animation: blinkAct 1s steps(1) infinite; }
-@keyframes blinkAct { 50% { box-shadow: 0 0 0 calc(var(--u) * .6) var(--edge); border-color: var(--gold-lo); } }
+/* botão esperado: sempre destacado, com seta dourada em cima e fundo pulsante */
+.act.hint { border-color: var(--gold-hi); background: #5a3a18; box-shadow: 0 0 0 calc(var(--u) * .7) var(--gold-hi); animation: blinkAct .8s steps(1) infinite; overflow: visible; }
+.act.hint::before { content: ''; position: absolute; left: 50%; top: calc(var(--u) * -11); width: calc(var(--u) * 9); height: calc(var(--u) * 9); transform: translateX(-50%); background: var(--ptr-down) center / 100% 100% no-repeat; image-rendering: pixelated; animation: bobPx .8s steps(2) infinite; }
+@keyframes blinkAct { 50% { background: #8a5a20; } }
+@keyframes bobPx { 50% { transform: translateX(-50%) translateY(calc(var(--u) * -2)); } }
 .act .key { font-weight: 700; font-size: .62em; }
 
 .tip, .hud-prompt, .toast {
@@ -290,3 +293,32 @@ table.hist th { color: var(--rubric); font-size: .95em; border-bottom: calc(var(
 .boot-cross { text-shadow: none; animation: none; }
 .boot-title { font-family: var(--f-deco); font-size: 64px; letter-spacing: 1px; }
 .boot-sub { font-style: italic; }
+
+/* ---------- guia passo a passo (tutorial): quadro “Agora / Como” ---------- */
+.hud-coach {
+  position: absolute; top: calc(var(--u) * 26); left: 50%; transform: translateX(-50%);
+  width: calc(var(--u) * 212); padding: calc(var(--u) * 3) calc(var(--u) * 4.5) calc(var(--u) * 2.6);
+  background: var(--tex-dark) 0 0 / calc(var(--u) * 32) calc(var(--u) * 32) repeat, var(--brown);
+  border: calc(var(--u) * .7) solid var(--gold);
+  box-shadow: 0 0 0 calc(var(--u) * .6) var(--edge), calc(var(--u) * 1.2) calc(var(--u) * 1.2) 0 calc(var(--u) * .6) rgba(0, 0, 0, .55);
+  color: #f4e6c4; pointer-events: none !important; image-rendering: pixelated; z-index: 4;
+}
+.hud-coach .c-label {
+  position: absolute; left: calc(var(--u) * 4); top: calc(var(--u) * -5.5);
+  background: var(--rubric); color: #fbefd6; font-variant-caps: small-caps; font-weight: 700; letter-spacing: .08em; font-size: .82em;
+  padding: 0 calc(var(--u) * 3); border: calc(var(--u) * .6) solid var(--gold); box-shadow: 0 0 0 calc(var(--u) * .5) var(--edge);
+}
+.hud-coach .c-what { font-size: 1.12em; font-weight: 600; color: var(--gold-hi); line-height: 1.25; }
+.hud-coach .c-how { font-size: .94em; margin-top: calc(var(--u) * 1); color: #eadab4; line-height: 1.35; }
+.hud-coach .kbd { background: #f4e6c4; color: var(--wine-dk); border-color: var(--gold); padding: 0 .35em; font-size: .9em; }
+.hud-coach.idle { border-color: var(--gold-lo); }
+.hud-coach.idle .c-label { background: #4a3a28; }
+.hud-coach.idle .c-what { color: #e6d4aa; }
+.hud-coach.pop { animation: coachPop .45s steps(3) 1; }
+@keyframes coachPop { 0% { transform: translateX(-50%) translateY(calc(var(--u) * -3)); } 100% { transform: translateX(-50%) translateY(0); } }
+
+/* avisos abaixo do quadro do guia, para não se sobreporem */
+.toast-wrap { top: calc(var(--u) * 66); }
+
+/* painel transparente quando o alvo do guia está atrás dele */
+.hud-tasks.see-through, .hud-rubric.see-through { opacity: .22; pointer-events: none; transition: opacity .25s; }

@@ -242,8 +242,6 @@
     // porta da capela de Nossa Senhora (parede esquerda)
     G.rect(x, nx0 - 16, 556, 16, 52, '#0e0a08'); G.rect(x, nx0 - 3, 556, 3, 52, CH.grayM2);
     G.shape(x, nx0 - 16, 550, 16, 10, G.roundArchMask(16, 10), CH.grayM);
-    // porta da sacristia (parede direita do presbitério): vermelha
-    G.rect(x, nx1, 194, 16, 46, CH.red2); G.rect(x, nx1 + 2, 196, 12, 42, CH.red); G.vline(x, nx1 + 8, 196, 42, CH.red2); G.px(x, nx1 + 3, 218, '#d8b060');
     // degrau do arco do presbitério
     G.rect(x, nx0, K.naveTop - 14, nx1 - nx0, 2, CH.grayM2);
     // parede do fundo e portas principais de madeira
@@ -312,7 +310,7 @@
     // ---------- colisão ----------
     sc.block(0, 0, W, 16); sc.block(0, H - 24, W, 24);
     sc.block(0, 0, 96, H); sc.block(480, 0, 96, H);           // paredes da nave única
-    sc.free(480, 196, 16, 42);                                   // porta da sacristia
+    sc.free(118, 120, 30, 12);                                   // porta da sacristia: a porta vermelha do sol, à esquerda do altar
     sc.free(80, 558, 16, 48);                                    // porta da capela de Nossa Senhora
     sc.block(96, 0, 384, K.wallBottom + 2);
     sc.block(K.mensa.x - 3, K.wallBottom, K.mensa.w + 6, K.mensa.top + K.mensa.front);
@@ -473,7 +471,7 @@
     pts.M_communion = { x: 300, y: 166, facing: 'up' };
     pts.M_railServer = { x: CX + 10, y: 302, facing: 'down' };
     pts.P_rail = { x: CX - 6, y: 302, facing: 'down' };
-    pts.sacristyDoor = { x: 470, y: 216, facing: 'left' };
+    pts.sacristyDoor = { x: 133, y: 140, facing: 'down' };
     pts.entry = { x: CX, y: 990, facing: 'up' };
     pts.chapelDoor = { x: 108, y: 584, facing: 'right' };
     const zones = sc.zones;
@@ -496,7 +494,7 @@
     zones.nave = { x: 96, y: K.naveTop, w: 384, h: H - K.naveTop - 24 };
 
     // ---------- portas ----------
-    sc.doors.push({ x: 480, y: 196, w: 16, h: 42, to: 'sacristy', spawn: 'churchDoor', label: 'Ir à sacristia' });
+    sc.doors.push({ x: 118, y: 120, w: 30, h: 12, top: true, to: 'sacristy', spawn: 'churchDoor', label: 'Ir à sacristia' });
     sc.doors.push({ x: 80, y: 558, w: 16, h: 48, to: 'chapel', spawn: 'naveDoor', label: 'Capela de Nossa Senhora' });
     sc.doors.push({ x: CX - 28, y: H - 26, w: 56, h: 4, to: null, exit: true, label: 'Portas principais (fechadas durante a celebração)', labelExplore: 'Sair da igreja' });
 
